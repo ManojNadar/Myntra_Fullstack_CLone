@@ -33,6 +33,7 @@ const MyContext = ({ children }) => {
   };
   const logout = () => {
     localStorage.removeItem("currentmyntrauser");
+
     dispatch({
       type: "LOGOUT",
     });

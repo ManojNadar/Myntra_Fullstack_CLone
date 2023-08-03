@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { MyntraContext } from "../Context/MyContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProfileDropDown = () => {
   const route = useNavigate();
@@ -9,8 +11,25 @@ const ProfileDropDown = () => {
 
   console.log(state);
 
+  const logoutUser = () => {
+    logout();
+    toast.success("Logged Out success");
+  };
+
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={700}
+        hideProgressBar={true}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <div id="dropdown-prof">
         {/* <h2 id="profile_name"></h2> */}
 
@@ -60,7 +79,7 @@ const ProfileDropDown = () => {
         {state?.currentuser && (
           <div className="logout_login">
             {/* <p>Edit Profile</p> */}
-            <button onClick={() => logout()}>Logout</button>
+            <button onClick={logoutUser}>Logout</button>
           </div>
         )}
       </div>

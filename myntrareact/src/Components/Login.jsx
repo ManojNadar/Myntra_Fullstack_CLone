@@ -3,6 +3,8 @@ import Navbar from "./Navbar";
 import "../Styles/Login.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import { MyntraContext } from "./Context/MyContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [loginInput, setLoginInput] = useState({
@@ -48,27 +50,41 @@ const Login = () => {
       if (flag) {
         // localStorage.setItem("currentmyntrauser", JSON.stringify(currentuser));
         login(currentuser);
-        alert("logged in success");
+        toast.success("logged in success");
         setLoginInput({
           loginEmail: "",
           loginPassword: "",
         });
 
-        route("/");
+        setTimeout(() => {
+          route("/");
+        }, 700);
       } else {
-        alert("invalid credentials");
+        toast.error("invalid credentials");
         setLoginInput({
           loginEmail: "",
           loginPassword: "",
         });
       }
     } else {
-      alert("please fill all the fields");
+      toast.error("please fill all the fields");
     }
   };
 
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={700}
+        hideProgressBar={true}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <Navbar />
       <div id="login-body">
         <div id="login-form">

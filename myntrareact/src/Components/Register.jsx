@@ -3,6 +3,8 @@ import Navbar from "./Navbar";
 import "../Styles/Register.css";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import { MyntraContext } from "./Context/MyContext";
 
 const Register = () => {
@@ -72,7 +74,7 @@ const Register = () => {
               "myntraRegUser",
               JSON.stringify(getMyntraRegUser)
             );
-            alert("successfully registered");
+            toast.success("successfully registered");
             setMyntraReg({
               myntraUser: "",
               myntraEmail: "",
@@ -83,10 +85,10 @@ const Register = () => {
 
             route("/login");
           } else {
-            alert("detail already registered please try login ");
+            toast.info("detail already registered please try login ");
           }
         } else {
-          alert("password doesnot match");
+          toast.error("password doesnot match");
           setMyntraReg({
             myntraUser: "",
             myntraEmail: "",
@@ -96,7 +98,7 @@ const Register = () => {
           });
         }
       } else {
-        alert("password must contain 3 or more characters");
+        toast.error("password must contain 3 or more characters");
         setMyntraReg({
           myntraUser: "",
           myntraEmail: "",
@@ -106,12 +108,24 @@ const Register = () => {
         });
       }
     } else {
-      alert("please fill all the fields");
+      toast.error("please fill all the fields");
     }
   };
 
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <Navbar />
       <div id="register-body">
         <div id="registration-form">
