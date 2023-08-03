@@ -1,9 +1,115 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import "../Styles/Register.css";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+// import { MyntraContext } from "./Context/MyContext";
 
 const Register = () => {
+  const [myntraReg, setMyntraReg] = useState({
+    myntraUser: "",
+    myntraEmail: "",
+    myntraPassword: "",
+    myntraCpassword: "",
+    myntraRole: "",
+    cart: [],
+  });
+
+  const route = useNavigate();
+
+  // const { state } = useContext(MyntraContext);
+
+  useEffect(() => {
+    const getmyntraUser = JSON.parse(localStorage.getItem("currentmyntrauser"));
+
+    if (getmyntraUser) {
+      route("/");
+    }
+  }, []);
+
+  const handleInputs = (e) => {
+    const { name, value } = e.target;
+
+    setMyntraReg({ ...myntraReg, [name]: value });
+  };
+
+  const {
+    myntraUser,
+    myntraEmail,
+    myntraPassword,
+    myntraCpassword,
+    myntraRole,
+  } = myntraReg;
+  const handleRegisterMyntra = (e) => {
+    e.preventDefault();
+
+    if (
+      myntraUser &&
+      myntraEmail &&
+      myntraPassword &&
+      myntraCpassword &&
+      myntraRole
+    ) {
+      if (myntraPassword.length > 3) {
+        if (myntraPassword === myntraCpassword) {
+          let getMyntraRegUser =
+            JSON.parse(localStorage.getItem("myntraRegUser")) || [];
+
+          let flag = false;
+          for (let i = 0; i < getMyntraRegUser.length; i++) {
+            if (getMyntraRegUser[i].myntraEmail === myntraReg.myntraEmail) {
+              flag = true;
+            }
+          }
+
+          if (!flag) {
+            let regUSerObj = {
+              ...myntraReg,
+            };
+
+            getMyntraRegUser.push(regUSerObj);
+            localStorage.setItem(
+              "myntraRegUser",
+              JSON.stringify(getMyntraRegUser)
+            );
+            alert("successfully registered");
+            setMyntraReg({
+              myntraUser: "",
+              myntraEmail: "",
+              myntraPassword: "",
+              myntraCpassword: "",
+              myntraRole: "",
+            });
+
+            route("/login");
+          } else {
+            alert("detail already registered please try login ");
+          }
+        } else {
+          alert("password doesnot match");
+          setMyntraReg({
+            myntraUser: "",
+            myntraEmail: "",
+            myntraPassword: "",
+            myntraCpassword: "",
+            myntraRole: "",
+          });
+        }
+      } else {
+        alert("password must contain 3 or more characters");
+        setMyntraReg({
+          myntraUser: "",
+          myntraEmail: "",
+          myntraPassword: "",
+          myntraCpassword: "",
+          myntraRole: "",
+        });
+      }
+    } else {
+      alert("please fill all the fields");
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -23,44 +129,64 @@ const Register = () => {
 
               {/* <!-- registering Form --> */}
 
-              <form onsubmit="registerForm(event)">
+              <form onSubmit={handleRegisterMyntra}>
                 <div className="input-details">
-                  <label>User Name</label>
                   <input
                     type="text"
                     placeholder="User Name"
                     id="reg_userName"
+                    name="myntraUser"
+                    onChange={handleInputs}
+                    value={myntraReg.myntraUser}
                   />
                 </div>
                 <div className="input-details">
-                  <label>Email</label>
-
-                  <input type="email" placeholder="Email" id="reg_Email" />
+                  <input
+                    name="myntraEmail"
+                    type="email"
+                    placeholder="user Email"
+                    id="reg_Email"
+                    onChange={handleInputs}
+                    value={myntraReg.myntraEmail}
+                  />
                 </div>
                 <div className="input-details">
-                  <label>Password</label>
-
                   <input
+                    name="myntraPassword"
                     type="password"
                     placeholder="*************"
                     id="reg_Password"
+                    onChange={handleInputs}
+                    value={myntraReg.myntraPassword}
                   />
                 </div>
                 <div className="input-details">
-                  <label>Confirm Password</label>
-
                   <input
                     type="password"
                     placeholder="*************"
                     id="reg_Cpassword"
+                    name="myntraCpassword"
+                    onChange={handleInputs}
+                    value={myntraReg.myntraCpassword}
                   />
                 </div>
-                <div className="input-checkbox">
+                <div className="input-details">
+                  <select
+                    value={myntraReg.myntraRole}
+                    onChange={handleInputs}
+                    name="myntraRole"
+                  >
+                    <option value="">BUYER OR SELLER</option>
+                    <option value="Buyer">Buyer</option>
+                    <option value="Seller">Seller</option>
+                  </select>
+                </div>
+                {/* <div className="input-checkbox">
                   <input type="checkbox" />
                   <p>
                     I agree to the <b> Terms and Conditons..</b>
                   </p>
-                </div>
+                </div> */}
 
                 <div id="sign-up">
                   <div>

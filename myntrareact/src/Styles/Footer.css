@@ -1,22 +1,22 @@
 #footer {
   width: 100%;
-  margin-top: 100px;
+  /* border: 2px solid red; */
 }
 
 #footer-child {
-  width: 82%;
-  margin: auto;
+  width: 100%;
+  margin: 5% auto;
   /* border: 2px solid red; */
   height: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 #useful-links {
   margin-top: 20px;
 }
 #onlineShopping {
-  width: 12%;
+  width: 15%;
   /* border: 1px solid blue; */
 }
 
@@ -32,7 +32,7 @@ li {
 }
 
 #customerPolicies {
-  width: 12%;
+  width: 15%;
   /* border: 1px solid blue; */
 }
 

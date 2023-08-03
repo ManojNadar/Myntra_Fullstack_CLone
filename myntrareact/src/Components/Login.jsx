@@ -1,9 +1,72 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import "../Styles/Login.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { MyntraContext } from "./Context/MyContext";
 
 const Login = () => {
+  const [loginInput, setLoginInput] = useState({
+    loginEmail: "",
+    loginPassword: "",
+  });
+  const route = useNavigate();
+  const { login } = useContext(MyntraContext);
+
+  useEffect(() => {
+    const getmyntraUser = JSON.parse(localStorage.getItem("currentmyntrauser"));
+
+    if (getmyntraUser) {
+      route("/");
+    }
+  }, []);
+
+  const handleLoginInput = (e) => {
+    const { name, value } = e.target;
+    setLoginInput({ ...loginInput, [name]: value });
+  };
+
+  const { loginEmail, loginPassword } = loginInput;
+
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+
+    if (loginEmail && loginPassword) {
+      const myntraRegUser = JSON.parse(localStorage.getItem("myntraRegUser"));
+
+      let flag = false;
+      let currentuser;
+      for (let i = 0; i < myntraRegUser.length; i++) {
+        if (
+          myntraRegUser[i].myntraEmail === loginEmail &&
+          myntraRegUser[i].myntraPassword === loginPassword
+        ) {
+          flag = true;
+          currentuser = myntraRegUser[i];
+        }
+      }
+
+      if (flag) {
+        // localStorage.setItem("currentmyntrauser", JSON.stringify(currentuser));
+        login(currentuser);
+        alert("logged in success");
+        setLoginInput({
+          loginEmail: "",
+          loginPassword: "",
+        });
+
+        route("/");
+      } else {
+        alert("invalid credentials");
+        setLoginInput({
+          loginEmail: "",
+          loginPassword: "",
+        });
+      }
+    } else {
+      alert("please fill all the fields");
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -25,17 +88,30 @@ const Login = () => {
 
             {/* <!-- Login form --> */}
 
-            <form onsubmit="signInForm(event)">
+            <form onSubmit={handleLoginSubmit}>
               <input
                 type="email"
                 placeholder="Your Email"
                 id="login_email_myntra"
+                name="loginEmail"
+                value={loginInput.loginEmail}
+                onChange={handleLoginInput}
               />
               <input
                 type="password"
                 placeholder="Your Password"
                 id="login_password_myntra"
+                name="loginPassword"
+                value={loginInput.loginPassword}
+                onChange={handleLoginInput}
               />
+
+              <div id="btn">
+                <button type="submit" value="Login">
+                  Login
+                </button>
+              </div>
+
               <div id="terms-conditions">
                 <p>
                   By Continuing, I agree to the
@@ -44,12 +120,6 @@ const Login = () => {
                     <span>&</span> Privacy Policy
                   </span>
                 </p>
-              </div>
-
-              <div id="btn">
-                <button type="submit" value="Login">
-                  Login
-                </button>
               </div>
 
               <div class="form-end">
