@@ -39,17 +39,17 @@ const Home = () => {
 
       <div id="body">
         {/* <!-- top section --> */}
-        <iframe
+        {/* <iframe
           id="sale-offer"
           src="https://giphy.com/embed/TSjMC8Kxp5G2TpBr0J"
           width="180"
           height="180"
           frameborder="0"
-        ></iframe>
+        ></iframe> */}
 
         <div id="top-body">
           <div>
-            <img src={poster} />
+            <img src={poster} alt="" />
           </div>
         </div>
 

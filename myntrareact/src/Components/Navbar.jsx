@@ -195,7 +195,7 @@ const Navbar = () => {
           {/* <!-- DropDown Profile --> */}
 
           <div id="dropdown-prof">
-            <h2 id="profile_name"></h2>
+            {/* <h2 id="profile_name"></h2> */}
             <div id="logout_login"></div>
             <div>
               <NavLink to="/profile.html">
