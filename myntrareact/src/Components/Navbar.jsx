@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "../Styles/Navbar.css";
 import myntlogo from "../Assets/myntra.png";
 import { NavLink } from "react-router-dom";
 import ProfileDropDown from "./DropDowns/ProfileDropDown";
 import CategoryDd from "./DropDowns/CategoryDd";
+import { BsBag } from "react-icons/bs";
+import { MyntraContext } from "./Context/MyContext";
 
 const Navbar = () => {
   const [profileHover, setProfileHover] = useState(false);
   const [categryHover, setCategryHover] = useState(false);
+
+  const { state } = useContext(MyntraContext);
 
   const showProdDd = () => {
     setProfileHover(true);
@@ -100,7 +104,6 @@ const Navbar = () => {
               <small>Profile</small>
             </p>
           </div>
-
           <div>
             <i className="fa-regular fa-heart fa-sm"></i>
             <p>
@@ -109,14 +112,16 @@ const Navbar = () => {
               </small>
             </p>
           </div>
-          <div>
-            <NavLink to="/cart">
-              <i className="fa-solid fa-bag-shopping fa-sm"></i>
-            </NavLink>
-            <p>
-              <small>bag</small>
-            </p>
-          </div>
+          {state?.currentuser?.myntraRole === "Buyer" ? (
+            <div>
+              <NavLink to="/cart">
+                <BsBag />
+              </NavLink>
+              <p>
+                <small>bag</small>
+              </p>
+            </div>
+          ) : null}
         </div>
       </div>
     </>

@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import "../Styles/Register.css";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import { MyntraContext } from "./Context/MyContext";
 
 const Register = () => {
   const [myntraReg, setMyntraReg] = useState({
@@ -18,8 +17,6 @@ const Register = () => {
   });
 
   const route = useNavigate();
-
-  // const { state } = useContext(MyntraContext);
 
   useEffect(() => {
     const getmyntraUser = JSON.parse(localStorage.getItem("currentmyntrauser"));
@@ -85,7 +82,7 @@ const Register = () => {
 
             route("/login");
           } else {
-            toast.info("detail already registered please try login ");
+            toast.warn("detail already registered please try login ");
           }
         } else {
           toast.error("password doesnot match");

@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../Styles/Cart.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import myntralogo from "../Assets/myntra.png";
 
 const Cart = () => {
+  const route = useNavigate();
+  useEffect(() => {
+    const getmyntraUser = JSON.parse(localStorage.getItem("currentmyntrauser"));
+
+    if (getmyntraUser) {
+      if (getmyntraUser?.myntraRole === "Seller") {
+        route("/");
+      }
+    }
+  }, []);
+
   return (
     <>
       <div id="screen">

@@ -9,7 +9,7 @@ const ProfileDropDown = () => {
 
   const { state, logout } = useContext(MyntraContext);
 
-  console.log(state);
+  // console.log(state);
 
   const logoutUser = () => {
     logout();

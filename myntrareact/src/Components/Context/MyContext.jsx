@@ -22,7 +22,7 @@ const reducer = (state, action) => {
 
 const MyContext = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log(state);
+  // console.log(state);
 
   const login = (userData) => {
     localStorage.setItem("currentmyntrauser", JSON.stringify(userData));

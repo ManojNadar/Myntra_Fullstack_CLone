@@ -60,7 +60,7 @@ const Login = () => {
           route("/");
         }, 700);
       } else {
-        toast.error("invalid credentials");
+        toast.warn("invalid credentials");
         setLoginInput({
           loginEmail: "",
           loginPassword: "",
@@ -138,13 +138,13 @@ const Login = () => {
                 </p>
               </div>
 
-              <div class="form-end">
+              <div className="form-end">
                 <p>
                   Have trouble logging in ? <span>Get help</span>
                 </p>
               </div>
 
-              <div class="form-end">
+              <div className="form-end">
                 <p>
                   New User ?
                   <span>
