@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../Navbar";
 import "../../Styles/AllProducts.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const AllProducts = () => {
+  const [allproducts, setAllProducts] = useState([]);
+  const route = useNavigate();
+  // console.log(allproducts);
+
+  useEffect(() => {
+    const getProducts = JSON.parse(localStorage.getItem("myntraproducts"));
+    if (getProducts) {
+      setAllProducts(getProducts);
+    }
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -37,9 +48,7 @@ const AllProducts = () => {
 
           <div id="recommemdations">
             <select>
-              <option>
-                Sort by: <span> Recommended</span>
-              </option>
+              <option>Sort by: Recommended</option>
               <option>Whats new</option>
               <option>Popularity</option>
               <option>Better Discount</option>
@@ -187,77 +196,56 @@ const AllProducts = () => {
             </div>
           </div>
           <div id="mul-products">
-            <div id="mul-section">
-              <div className="mul-img">
-                <NavLink to="/singleproduct">
-                  {/* <p
-                  style="
-                      background-color: rgb(243, 85, 129);
-                      width: 25%;
-                      clip-path: polygon(
-                        0% 0%,
-                        100% 0%,
-                        calc(100% - 20px) 50%,
-                        100% 100%,
-                        0% 100%
-                      );
+            {allproducts?.length ? (
+              <div id="mul-section">
+                {allproducts.map((item) => (
+                  <div
+                    className="mul-img"
+                    onClick={() => route("/singleproduct")}
+                  >
+                    <div className="singleImg">
+                      <img src={item.prodImg} alt="" />
+                    </div>
 
-                      color: white;
-                      font-weight: bold;
-                      font-size: 0.9em;
-                      padding-left: 5px;
-                      position: absolute;
-                      top: 5%;
-                    "
-                >
-                  New
-                </p> */}
-                  <img
-                    src="https://assets.myntassets.com/h_720,q_90,w_540/v1/assets/images/2475811/2018/4/20/11524206887991-Roadster-Men-Tshirts-9291524206887825-1.jpg"
-                    alt=""
-                  />
-                  <div className="inside-img">
-                    <p>4.5</p>
-                    <i
-                      className="fa-solid fa-star"
-                      style={{ color: "#2aa24e" }}
-                    ></i>
-                    <p>|</p>
-                    <p>355</p>
+                    <div className="product-details">
+                      <h4>{item.prodTitle}</h4>
+                      <p>{item.prodBrand}</p>
+                      <p>
+                        <b>Rs.{item.prodPrice}</b>{" "}
+                        <span className="line-through">
+                          Rs.{item.prodDiscount}
+                        </span>
+                        <span className="span-color">
+                          &nbsp;({item.prodOffer}) %
+                        </span>
+                      </p>
+                    </div>
                   </div>
-
-                  <div className="product-details">
-                    <h4>United Colors of Benetton</h4>
-                    <p>Polo Collar Cotton T-shirt</p>
-                    <p>
-                      <b>Rs.1874</b>{" "}
-                      <span className="line-through"> Rs.2499</span>
-                      <span className="span-color"> (25% OFF)</span>
-                    </p>
-                  </div>
-                </NavLink>
-              </div>
-              <div id="pages">
-                <div id="child-page">
-                  <div>Page 1 of 2109</div>
-                  <div>
-                    <button>1</button>
-                    <button>2</button>
-                    <button>3</button>
-                    <button>4</button>
-                    <button>5</button>
-                    <button>6</button>
-                    <button>7</button>
-                    <button>8</button>
-                    <button>9</button>
-                    <button>10</button>
-                  </div>
-                  <div>
-                    <button>Next</button>
+                ))}
+                <div id="pages">
+                  <div id="child-page">
+                    <div>Page 1 of 2109</div>
+                    <div>
+                      <button>1</button>
+                      <button>2</button>
+                      <button>3</button>
+                      <button>4</button>
+                      <button>5</button>
+                      <button>6</button>
+                      <button>7</button>
+                      <button>8</button>
+                      <button>9</button>
+                      <button>10</button>
+                    </div>
+                    <div>
+                      <button>Next</button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div>...Loading</div>
+            )}
           </div>
         </div>
       </div>
@@ -266,3 +254,40 @@ const AllProducts = () => {
 };
 
 export default AllProducts;
+
+{
+  /* <div className="inside-img">
+                        <p>4.5</p>
+                        <i
+                          className="fa-solid fa-star"
+                          style={{ color: "#2aa24e" }}
+                        ></i>
+                        <p>|</p>
+                        <p>355</p>
+                      </div> */
+}
+
+{
+  /* <p
+                    style="
+                        background-color: rgb(243, 85, 129);
+                        width: 25%;
+                        clip-path: polygon(
+                          0% 0%,
+                          100% 0%,
+                          calc(100% - 20px) 50%,
+                          100% 100%,
+                          0% 100%
+                        );
+  
+                        color: white;
+                        font-weight: bold;
+                        font-size: 0.9em;
+                        padding-left: 5px;
+                        position: absolute;
+                        top: 5%;
+                      "
+                  >
+                    New
+                  </p> */
+}

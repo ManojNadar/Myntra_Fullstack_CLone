@@ -59,9 +59,18 @@ const ProfileDropDown = () => {
           </div>
         )}
         <div>
-          {/* <NavLink to="/profile">
-                <p>See Profile</p>
-              </NavLink> */}
+          {state?.currentuser?.myntraRole === "Seller" ? (
+            <h4
+              onClick={() => route("/addproduct")}
+              style={{
+                textAlign: "center",
+                cursor: "pointer",
+              }}
+            >
+              Add Product
+            </h4>
+          ) : null}
+
           <p>Orders</p>
           <p>Wishlists</p>
           <p>Gift Cards</p>

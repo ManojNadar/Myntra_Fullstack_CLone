@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import "../Styles/Profile.css";
 import Footer from "./Footer";
@@ -6,8 +6,81 @@ import { useNavigate } from "react-router-dom";
 import { MyntraContext } from "./Context/MyContext";
 
 const Profile = () => {
+  const [profileModal, setProfileModal] = useState(false);
+  const [prevValue, setPrevValue] = useState({});
+
+  // console.log(prevValue);
   const route = useNavigate();
-  const { state } = useContext(MyntraContext);
+  const { state, login } = useContext(MyntraContext);
+
+  const updateProfileDetails = (e) => {
+    const { name, value } = e.target;
+    setPrevValue({ ...prevValue, [name]: value });
+  };
+
+  const submitUpdateProfileDetails = (e) => {
+    e.preventDefault();
+
+    const { myntraUser, myntraPassword, myntraCpassword } = prevValue;
+
+    if (myntraUser && myntraPassword && myntraCpassword) {
+      if (myntraPassword === myntraCpassword) {
+        const getCurrData = JSON.parse(
+          localStorage.getItem("currentmyntrauser")
+        );
+        const regmyntraUser = JSON.parse(localStorage.getItem("myntraRegUser"));
+
+        if (getCurrData) {
+          for (let i = 0; i < regmyntraUser.length; i++) {
+            if (regmyntraUser[i].myntraEmail === getCurrData.myntraEmail) {
+              regmyntraUser[i].myntraUser = prevValue.myntraUser;
+              regmyntraUser[i].myntraPassword = prevValue.myntraPassword;
+              regmyntraUser[i].myntraCpassword = prevValue.myntraCpassword;
+              getCurrData.myntraUser = prevValue.myntraUser;
+              getCurrData.myntraPassword = prevValue.myntraPassword;
+              getCurrData.myntraCpassword = prevValue.myntraCpassword;
+
+              login(getCurrData);
+              localStorage.setItem(
+                "myntraRegUser",
+                JSON.stringify(regmyntraUser)
+              );
+              localStorage.setItem(
+                "currentmyntrauser",
+                JSON.stringify(getCurrData)
+              );
+              setProfileModal(false);
+              alert("profile updated");
+            }
+          }
+        }
+      } else {
+        alert("password do not match");
+      }
+    } else {
+      alert("no value has been changed");
+    }
+  };
+
+  const openProfileModal = () => {
+    setProfileModal(true);
+  };
+  const closeProfileModal = () => {
+    setProfileModal(false);
+  };
+
+  useEffect(() => {
+    const getCurrData = JSON.parse(localStorage.getItem("currentmyntrauser"));
+    const regmyntraUser = JSON.parse(localStorage.getItem("myntraRegUser"));
+
+    if (getCurrData) {
+      for (let i = 0; i < regmyntraUser.length; i++) {
+        if (regmyntraUser[i].myntraEmail === getCurrData.myntraEmail) {
+          setPrevValue(regmyntraUser[i]);
+        }
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const getmyntraUser = JSON.parse(localStorage.getItem("currentmyntrauser"));
@@ -21,6 +94,51 @@ const Profile = () => {
     <>
       <Navbar />
 
+      {/* edit profile modal */}
+
+      {profileModal && (
+        <div className="editProfileModal">
+          <p onClick={closeProfileModal} className="closeProfileContainer">
+            X
+          </p>
+          <form
+            className="updateProfileForm"
+            onSubmit={submitUpdateProfileDetails}
+          >
+            <div>
+              <input
+                type="text"
+                onChange={updateProfileDetails}
+                placeholder="Update Name"
+                value={prevValue.myntraUser}
+                name="myntraUser"
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                onChange={updateProfileDetails}
+                placeholder="Update password"
+                value={prevValue.myntraPassword}
+                name="myntraPassword"
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                onChange={updateProfileDetails}
+                placeholder="Confirm Password"
+                name="myntraCpassword"
+              />
+            </div>
+            <div>
+              <input type="submit" value="UPDATE DETAILS" />
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* main body profile */}
       <div id="body">
         <div id="main-body">
           <div id="top">
@@ -125,7 +243,7 @@ const Profile = () => {
                   </div>
                 </div>
                 <div id="edit-btn">
-                  <button>EDIT</button>
+                  <button onClick={openProfileModal}>EDIT</button>
                 </div>
               </div>
             </div>

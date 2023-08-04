@@ -53,7 +53,7 @@
   z-index: 9999;
   width: 80%;
   background-color: rgb(255, 255, 255);
-  position: absolute;
+  position: fixed;
   left: 11.5%;
   top: 12.1%;
   box-shadow: 2px 3px 10px black;
