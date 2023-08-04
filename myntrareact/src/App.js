@@ -8,6 +8,11 @@ import SingleProduct from "./Components/Products/SingleProduct";
 import Cart from "./Components/Cart";
 import Profile from "./Components/Profile";
 import AddProduct from "./Components/Products/AddProduct";
+import Men from "./Components/Products/Men";
+import Women from "./Components/Products/Women";
+import Kids from "./Components/Products/Kids";
+import Beauty from "./Components/Products/Beauty";
+import HomeProduct from "./Components/Products/HomeProduct";
 function App() {
   return (
     <>
@@ -15,6 +20,11 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route exact path="/allproducts" element={<AllProducts />} />
+          <Route exact path="/menmyntra" element={<Men />} />
+          <Route exact path="/womenmyntra" element={<Women />} />
+          <Route exact path="/kidsmyntra" element={<Kids />} />
+          <Route exact path="/homeproductmyntra" element={<HomeProduct />} />
+          <Route exact path="/beautymyntra" element={<Beauty />} />
           <Route exact path="/singleproduct/:id" element={<SingleProduct />} />
           <Route exact path="/addproduct" element={<AddProduct />} />
           <Route exact path="/profile" element={<Profile />} />

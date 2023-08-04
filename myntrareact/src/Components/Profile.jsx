@@ -4,6 +4,8 @@ import "../Styles/Profile.css";
 import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
 import { MyntraContext } from "./Context/MyContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Profile = () => {
   const [profileModal, setProfileModal] = useState(false);
@@ -50,15 +52,15 @@ const Profile = () => {
                 JSON.stringify(getCurrData)
               );
               setProfileModal(false);
-              alert("profile updated");
+              toast.success("profile updated");
             }
           }
         }
       } else {
-        alert("password do not match");
+        toast.error("password do not match");
       }
     } else {
-      alert("no value has been changed");
+      toast.warn("no value has been changed");
     }
   };
 
@@ -93,6 +95,18 @@ const Profile = () => {
   return (
     <>
       <Navbar />
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
 
       {/* edit profile modal */}
 

@@ -63,19 +63,19 @@ const Navbar = () => {
           >
             All
           </NavLink>
-          <NavLink id="men" to="/men">
+          <NavLink id="men" to="/menmyntra">
             MEN
           </NavLink>
-          <NavLink id="women" to="/womenMyntra.html">
+          <NavLink id="women" to="/womenmyntra">
             WOMEN
           </NavLink>
-          <NavLink id="kids" to="/kids.html">
+          <NavLink id="kids" to="/kidsmyntra">
             KIDS
           </NavLink>
-          <NavLink id="homeLeaving" to="/homeLiving.html">
+          <NavLink id="homeLeaving" to="/homeproductmyntra">
             HOME & LIVING
           </NavLink>
-          <NavLink id="beauty" to="/beauty.html">
+          <NavLink id="beauty" to="/beautymyntra">
             BEAUTY
           </NavLink>
           {/* <NavLink to="">

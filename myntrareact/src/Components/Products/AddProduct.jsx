@@ -65,9 +65,9 @@ const AddProduct = () => {
         prodCategory: "",
       });
 
-      setTimeout(() => {
-        route("/allproducts");
-      }, 1100);
+      // setTimeout(() => {
+      //   route("/allproducts");
+      // }, 700);
     } else {
       toast.error("please fill all the product details");
     }
@@ -77,12 +77,11 @@ const AddProduct = () => {
     <>
       <ToastContainer
         position="top-right"
-        autoClose={1000}
-        hideProgressBar={false}
+        autoClose={500}
+        hideProgressBar={true}
         newestOnTop={false}
         closeOnClick
         rtl={false}
-        pauseOnFocusLoss
         draggable
         pauseOnHover
         theme="dark"
