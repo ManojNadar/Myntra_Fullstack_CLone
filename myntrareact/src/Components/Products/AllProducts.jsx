@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../Navbar";
 import "../../Styles/AllProducts.css";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const AllProducts = () => {
   const [allproducts, setAllProducts] = useState([]);
@@ -14,6 +14,42 @@ const AllProducts = () => {
       setAllProducts(getProducts);
     }
   }, []);
+
+  const handleCategoryChange = (e) => {
+    const { value } = e.target;
+
+    const getAllProduct = JSON.parse(localStorage.getItem("myntraproducts"));
+
+    if (value === "Mens") {
+      const filterProduct = getAllProduct.filter(
+        (e) => e.prodCategory === "Mens"
+      );
+      setAllProducts(filterProduct);
+    } else if (value === "Womens") {
+      const filterProduct = getAllProduct.filter(
+        (e) => e.prodCategory === "Womens"
+      );
+      setAllProducts(filterProduct);
+    } else if (value === "Kids") {
+      const filterProduct = getAllProduct.filter(
+        (e) => e.prodCategory === "Kids"
+      );
+      setAllProducts(filterProduct);
+    } else if (value === "Home") {
+      const filterProduct = getAllProduct.filter(
+        (e) => e.prodCategory === "Home"
+      );
+      setAllProducts(filterProduct);
+    }
+    else if (value === "Beauty") {
+      const filterProduct = getAllProduct.filter(
+        (e) => e.prodCategory === "Beauty"
+      );
+      setAllProducts(filterProduct);
+    }else{
+      setAllProducts(getAllProduct)
+    }
+  };
 
   return (
     <>
@@ -47,14 +83,13 @@ const AllProducts = () => {
           </div>
 
           <div id="recommemdations">
-            <select>
-              <option>Sort by: Recommended</option>
-              <option>Whats new</option>
-              <option>Popularity</option>
-              <option>Better Discount</option>
-              <option>Price:High to Low</option>
-              <option>Price:Low to High</option>
-              <option>Customer Ratings</option>
+            <select onChange={handleCategoryChange}>
+              <option value="">Sort by: Category</option>
+              <option value="Mens">Men</option>
+              <option value="Womens">Women</option>
+              <option value="Kids">Kids</option>
+              <option value="Home">Home</option>
+              <option value="Beauty">Beauty</option>
             </select>
           </div>
         </div>
@@ -201,7 +236,8 @@ const AllProducts = () => {
                 {allproducts.map((item) => (
                   <div
                     className="mul-img"
-                    onClick={() => route("/singleproduct")}
+                    key={item.id}
+                    onClick={() => route(`/singleproduct/${item.id}`)}
                   >
                     <div className="singleImg">
                       <img src={item.prodImg} alt="" />

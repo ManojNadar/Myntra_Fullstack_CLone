@@ -3,6 +3,8 @@ import Navbar from "../Navbar";
 import "../../Styles/AddProduct.css";
 import { v4 as uid } from "uuid";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddProduct = () => {
   const [product, setProduct] = useState({
@@ -52,7 +54,7 @@ const AddProduct = () => {
 
       getProduct.push(productObj);
       localStorage.setItem("myntraproducts", JSON.stringify(getProduct));
-      alert("product added");
+      toast.success("product added");
       setProduct({
         prodTitle: "",
         prodBrand: "",
@@ -62,14 +64,29 @@ const AddProduct = () => {
         prodDiscount: "",
         prodCategory: "",
       });
-      route("/allproducts");
+
+      setTimeout(() => {
+        route("/allproducts");
+      }, 1100);
     } else {
-      alert("please fill all the product details");
+      toast.error("please fill all the product details");
     }
   };
 
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <Navbar />
 
       <div className="addProductContainer">
@@ -139,7 +156,7 @@ const AddProduct = () => {
                 <option value="Mens">Mens</option>
                 <option value="Womens">Womens</option>
                 <option value="Kids">Kids</option>
-                <option value="HOME">HOME</option>
+                <option value="Home">HOME</option>
                 <option value="Beauty">Beauty</option>
               </select>
             </div>

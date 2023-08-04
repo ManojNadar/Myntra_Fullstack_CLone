@@ -1,42 +1,110 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../Styles/Cart.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import myntralogo from "../Assets/myntra.png";
+import { MyntraContext } from "./Context/MyContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Cart = () => {
-  const route = useNavigate();
-  useEffect(() => {
-    const getmyntraUser = JSON.parse(localStorage.getItem("currentmyntrauser"));
+  const [cartItem, setCartItem] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
 
-    if (getmyntraUser) {
-      if (getmyntraUser?.myntraRole === "Seller") {
-        route("/");
+  const { state } = useContext(MyntraContext);
+  const route = useNavigate();
+
+  useEffect(() => {
+    if (state?.currentuser?.myntraRole === "Seller") {
+      route("/");
+    }
+  }, [state?.currentuser]);
+
+  useEffect(() => {
+    const regUser = JSON.parse(localStorage.getItem("myntraRegUser"));
+
+    if (state?.currentuser) {
+      for (let i = 0; i < regUser.length; i++) {
+        if (regUser[i].myntraEmail === state?.currentuser?.myntraEmail) {
+          setCartItem(regUser[i].cart);
+        }
       }
     }
-  }, []);
+  }, [state]);
+
+  useEffect(() => {
+    if (cartItem?.length) {
+      let sum = 0;
+      for (let i = 0; i < cartItem.length; i++) {
+        sum += parseInt(cartItem[i].prodPrice);
+      }
+      setTotalPrice(sum);
+    }
+  }, [cartItem]);
+
+  const removeSingleProduct = (id) => {
+    const regUser = JSON.parse(localStorage.getItem("myntraRegUser"));
+
+    if (state?.currentuser) {
+      const filteredProduc = cartItem.filter((e) => e.id !== id);
+      for (let i = 0; i < regUser.length; i++) {
+        if (regUser[i].myntraEmail === state?.currentuser?.myntraEmail) {
+          setCartItem(filteredProduc);
+          regUser[i].cart = filteredProduc;
+          localStorage.setItem("myntraRegUser", JSON.stringify(regUser));
+          toast.info("product removed");
+        }
+      }
+    }
+  };
+
+  const placeOrder = () => {
+    const regUser = JSON.parse(localStorage.getItem("myntraRegUser"));
+    for (let i = 0; i < regUser.length; i++) {
+      if (regUser[i].myntraEmail === state?.currentuser?.myntraEmail) {
+        regUser[i].cart = [];
+        setCartItem([]);
+        setTotalPrice(0);
+        localStorage.setItem("myntraRegUser", JSON.stringify(regUser));
+        toast.success("order placed Successfully");
+      }
+    }
+  };
 
   return (
     <>
-      <div id="screen">
-        <div id="navbarCart">
-          <div id="logo">
-            <NavLink to="/">
-              <img src={myntralogo} alt="" />
-            </NavLink>
-          </div>
-          <div id="procedure">
-            <p>BAG</p>
-            <p>------------- ADDRESS --------------</p>
-            <p>PAYMENT</p>
-          </div>
-          <div id="payment-secure">
-            <img
-              src="https://constant.myntassets.com/checkout/assets/img/sprite-secure.png"
-              alt=""
-            />
-            <p>100% Secure</p>
-          </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
+      <div id="navbarCart">
+        <div id="logo">
+          <NavLink to="/">
+            <img src={myntralogo} alt="" />
+          </NavLink>
         </div>
+        <div id="procedure">
+          <p>BAG</p>
+          <p>------------- ADDRESS --------------</p>
+          <p>PAYMENT</p>
+        </div>
+        <div id="payment-secure">
+          <img
+            src="https://constant.myntassets.com/checkout/assets/img/sprite-secure.png"
+            alt=""
+          />
+          <p>100% Secure</p>
+        </div>
+      </div>
+
+      {cartItem.length ? (
         <div id="cartbody">
           <div id="cart-main-section">
             <div id="left-section">
@@ -54,67 +122,41 @@ const Cart = () => {
                 <p>Show More</p>
               </div>
 
-              <div id="left-3">
-                <div>
-                  <input type="checkbox" />
-                  <p>1/1 ITEMS SELECTED</p>
-                </div>
+              <div id="left-3"></div>
+              {cartItem.length > 0 &&
+                cartItem.map((item) => (
+                  <div id="left-4" key={item.id}>
+                    <i
+                      onClick={() => removeSingleProduct(item.id)}
+                      className="fa-solid fa-xmark fa-xl"
+                    ></i>
+                    <div id="cart-img">
+                      <img src={item.prodImg} alt="" />
+                    </div>
+                    <div id="cart-details">
+                      <div className="detail-desc">
+                        <h4>{item.prodTitle}</h4>
+                        <p>{item.prodBrand}</p>
+                        <p>{item.prodTitle}</p>
+                      </div>
 
-                <div>
-                  <button className="cart-btn">REMOVE</button>
-                  <span>|</span>
-                  <button className="cart-btn">MOVE TO WISHLIST</button>
-                </div>
-              </div>
-
-              <div id="left-4">
-                <i className="fa-solid fa-xmark fa-xl"></i>
-                <div id="cart-img">
-                  <img
-                    src="https://assets.myntassets.com/f_webp,dpr_1.5,q_60,w_210,c_limit,fl_progressive/assets/images/23024952/2023/5/4/31c45012-70a7-4497-8779-4b712bf82af11683223693150UnitedColorsofBenettonMenMulticolouredStripedPoloCollarPocke1.jpg"
-                    alt=""
-                  />
-                </div>
-                <div id="cart-details">
-                  <div
-                  //     style="
-                  //     background-color: rgb(243, 85, 129);
-                  //     width: 28%;
-                  //     clip-path: polygon(
-                  //       0% 0%,
-                  //       100% 0%,
-                  //       calc(100% - 20px) 50%,
-                  //       100% 100%,
-                  //       0% 100%
-                  //     );
-                  //     color: white;
-                  //     font-size: 0.85em;
-                  //     font-weight: bold;
-                  //   "
-                  >
-                    New Season
+                      <div id="qty">
+                        <p>Size: XXL</p>
+                        <p>Qty: 1</p>
+                      </div>
+                      <div className="detail-desc">
+                        <p>
+                          <b> Rs {item.prodPrice}</b>
+                          <span> {item.prodOffer}% OFF </span>
+                        </p>
+                        <p>
+                          <b>14 days </b>
+                          <span> return available</span>
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="detail-desc">
-                    <h4>United Colors of Benetton</h4>
-                    <p>Striped Polo Collar Cotton T-shirt</p>
-                    <p>sold by : Eshopobox Ecommerce Pvt Ltd</p>
-                  </div>
-
-                  <div id="qty">
-                    <p>Size: XXL</p>
-                    <p>Qty: 1</p>
-                  </div>
-                  <div className="detail-desc">
-                    <p>
-                      <b> Rs 1,874</b> <span> 25% OFF </span>
-                    </p>
-                    <p>
-                      <b>14 days </b>
-                      <span> return available</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
+                ))}
             </div>
             <div id="right-section">
               <div id="right-main">
@@ -130,9 +172,6 @@ const Cart = () => {
                   </div>
                   <button>Apply</button>
                 </div>
-                <p>
-                  <span>Login</span> to get upto Rs200 OFF on First Order
-                </p>
               </div>
 
               <div id="right-2">
@@ -163,16 +202,18 @@ const Cart = () => {
                     <p>
                       Convenience Fee
                       <span style={{ color: "red", fontWeight: "bold" }}>
-                        Know More
+                        &nbsp; Know More
                       </span>
                     </p>
                   </div>
                   <div>
-                    <p>Rs 2.499</p>
-                    <p style={{ color: "green" }}>-Rs 659</p>
+                    <p>Rs {totalPrice}</p>
+                    <p style={{ color: "green" }}>
+                      -Rs {totalPrice + totalPrice}
+                    </p>
                     <p style={{ color: "red" }}>Apply Couppon</p>
                     <p>
-                      Rs 99{" "}
+                      Rs 99
                       <span style={{ color: "rgb(12, 177, 12)" }}> FREE</span>
                     </p>
                   </div>
@@ -180,17 +221,39 @@ const Cart = () => {
 
                 <div id="total-price">
                   <h4>Total Amount</h4>
-                  <h4>Rs. 1844</h4>
+                  <h4>Rs. {totalPrice}</h4>
                 </div>
 
                 <div id="order-btn">
-                  <button>PLACE ORDER</button>
+                  <button onClick={placeOrder}>PLACE ORDER</button>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      ) : (
+        <div style={{ textAlign: "center" }}>
+          <h2>Your Cart is Empty</h2>
+          <button
+            onClick={() => route("/allproducts")}
+            style={{
+              width: "25%",
+              height: "45px",
+              marginTop: "2%",
+              backgroundColor: "transparent",
+            }}
+          >
+            Conitnue Shopping
+          </button>
+        </div>
+      )}
+    </>
+  );
+};
 
-          <div id="footer">
+export default Cart;
+{
+  /* <div id="footer">
             <div id="payment-method">
               <div id="payment-img">
                 <img
@@ -254,11 +317,5 @@ const Cart = () => {
               </div>
             </div>
             <div id="need-help">Need Help ? Contact Us</div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
-
-export default Cart;
+          </div> */
+}

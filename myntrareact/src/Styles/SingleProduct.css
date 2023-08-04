@@ -11,12 +11,12 @@
   padding: 15px;
 }
 
-#main-body {
+#main-singlebody {
   /* height: 100%; */
   width: 100%;
 }
 
-#main-section {
+#main-singleProdsection {
   width: 97%;
   height: 100%;
   margin: auto;
@@ -24,7 +24,7 @@
   justify-content: space-between;
 }
 
-#left {
+#left-singleProd {
   width: 59%;
   /* border: 1px solid brown; */
   height: 100%;
@@ -32,25 +32,25 @@
   flex-wrap: wrap;
   justify-content: space-between;
 }
-#left > div {
+#left-singleProd > div {
   width: 49.5%;
   margin-bottom: 10px;
   overflow: hidden;
   height: 500px;
 }
 
-#left > div > img {
+#left-singleProd > div > img {
   width: 100%;
   height: 100%;
-  /* border: 1px solid red; */
+  border: 1px solid whitesmoke;
 }
-#left > div > img:hover {
+#left-singleProd > div > img:hover {
   transform: scale(1.2);
   transition: all 0.2s ease-in-out;
   cursor: pointer;
 }
 
-#right {
+#right-singleProd {
   width: 39%;
   /* border: 1px solid violet; */
   /* height: 350vh; */
@@ -158,6 +158,17 @@
   cursor: pointer;
 }
 
+.updateBtn > div > button {
+  background-color: green;
+  width: 70%;
+  height: 45px;
+  margin-top: 5%;
+  color: white;
+  font-weight: bolder;
+  font-size: 1.1em;
+  border: none;
+}
+
 #btn {
   width: 80%;
   /* border: 1px solid black; */
@@ -165,6 +176,7 @@
   justify-content: space-between;
   margin: 25px 0;
 }
+
 #btn > div:nth-child(1) {
   width: 60%;
   /* border: 1px solid red; */
@@ -532,4 +544,78 @@
 .bottom-img > img {
   width: 100%;
   height: 100%;
+}
+
+/* update Product modal */
+
+.updateProductContainer {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  z-index: 995;
+  background-color: transparent;
+}
+
+.updateProductSection {
+  width: 50%;
+  height: 75%;
+  z-index: 999;
+  position: fixed;
+  left: 25%;
+  top: 20%;
+  height: 75%;
+  background-image: linear-gradient(green, purple);
+  box-shadow: 0px 5px 5px black;
+}
+.updateProductSection > p {
+  color: white;
+  font-weight: bolder;
+  position: absolute;
+  right: 3%;
+  top: 2%;
+  cursor: pointer;
+}
+
+.updateProductForm {
+  width: 90%;
+  margin: 0 auto;
+}
+.updateProductForm > div {
+  width: 100%;
+  margin: 5% 0 0 0;
+}
+.updateProductForm > div > input {
+  width: 100%;
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  color: white;
+  outline: none;
+  border-bottom: 2px solid white;
+  padding-left: 2%;
+  font-weight: bolder;
+}
+.updateProductForm > div > select {
+  width: 100%;
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  color: white;
+  outline: none;
+  border: 2px solid white;
+  padding-left: 2%;
+  font-weight: bolder;
+}
+.updateProductForm > div > select > option {
+  background-color: purple;
+}
+
+.updateProductForm > div > input::placeholder {
+  color: white;
+}
+.updateProductForm > div > input[type="submit"] {
+  border: 2px solid white;
+  color: white;
+  font-weight: bolder;
+  height: 35px;
 }

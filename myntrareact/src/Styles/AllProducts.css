@@ -63,15 +63,17 @@
 
 #recommemdations > select {
   width: 80%;
-  /* border: 1px solid brown; */
   height: 70%;
+  height: 35px;
   padding-left: 15px;
   margin-top: 8px;
   border-color: #cbcbce;
-}
-#recommemdations > select > option > span {
   font-weight: bolder;
+  background-color: grey;
+  font-size: 1.1em;
+  border-radius: 5px;
 }
+
 /*  */
 
 #main-section {
