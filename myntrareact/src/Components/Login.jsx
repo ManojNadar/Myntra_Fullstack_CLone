@@ -8,8 +8,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [loginInput, setLoginInput] = useState({
-    loginEmail: "",
-    loginPassword: "",
+    myntraEmail: "",
+    myntraPassword: "",
   });
   const route = useNavigate();
   const { login } = useContext(MyntraContext);
@@ -27,20 +27,20 @@ const Login = () => {
     setLoginInput({ ...loginInput, [name]: value });
   };
 
-  const { loginEmail, loginPassword } = loginInput;
+  const { myntraEmail, myntraPassword } = loginInput;
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
 
-    if (loginEmail && loginPassword) {
+    if (myntraEmail && myntraPassword) {
       const myntraRegUser = JSON.parse(localStorage.getItem("myntraRegUser"));
 
       let flag = false;
       let currentuser;
       for (let i = 0; i < myntraRegUser.length; i++) {
         if (
-          myntraRegUser[i].myntraEmail === loginEmail &&
-          myntraRegUser[i].myntraPassword === loginPassword
+          myntraRegUser[i].myntraEmail === myntraEmail &&
+          myntraRegUser[i].myntraPassword === myntraPassword
         ) {
           flag = true;
           currentuser = myntraRegUser[i];
