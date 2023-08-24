@@ -17,7 +17,7 @@ const Register = () => {
     cart: [],
   });
 
-  const router = useNavigate();
+  // const router = useNavigate();
 
   const handleInputs = (e) => {
     const { name, value } = e.target;

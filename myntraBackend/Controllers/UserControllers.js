@@ -49,7 +49,7 @@ export const Register = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "internal Server Error From Catch block",
+      message: "internal Server Error Register  From Catch block",
     });
   }
 };
