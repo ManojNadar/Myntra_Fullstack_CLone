@@ -3,12 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 // import userRouter from "./Routes/UserRouter.js";
-import {
-  Currentuser,
-  Home,
-  Login,
-  Register,
-} from "./Controllers/UserControllers.js";
+import { Login, Register, currentuser } from "./Controllers/UserControllers.js";
 
 const app = express();
 dotenv.config();
@@ -18,12 +13,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // app.use("/", userRouter);
 
-app.get("/", Home);
-
 // user routers
 app.post("/register", Register);
 app.post("/login", Login);
-app.post("/currentuser", Currentuser);
+app.post("/currentuser", currentuser);
 
 const MONGO_URI = process.env.MONGO_URI;
 

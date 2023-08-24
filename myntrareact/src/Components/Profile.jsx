@@ -23,10 +23,10 @@ const Profile = () => {
   const submitUpdateProfileDetails = (e) => {
     e.preventDefault();
 
-    const { myntraUser, myntraPassword, myntraCpassword } = prevValue;
+    const { name, password, confirmPassword } = prevValue;
 
-    if (myntraUser && myntraPassword && myntraCpassword) {
-      if (myntraPassword === myntraCpassword) {
+    if (name && password && confirmPassword) {
+      if (password === confirmPassword) {
         const getCurrData = JSON.parse(
           localStorage.getItem("currentmyntrauser")
         );
@@ -34,13 +34,13 @@ const Profile = () => {
 
         if (getCurrData) {
           for (let i = 0; i < regmyntraUser.length; i++) {
-            if (regmyntraUser[i].myntraEmail === getCurrData.myntraEmail) {
-              regmyntraUser[i].myntraUser = prevValue.myntraUser;
-              regmyntraUser[i].myntraPassword = prevValue.myntraPassword;
-              regmyntraUser[i].myntraCpassword = prevValue.myntraCpassword;
-              getCurrData.myntraUser = prevValue.myntraUser;
-              getCurrData.myntraPassword = prevValue.myntraPassword;
-              getCurrData.myntraCpassword = prevValue.myntraCpassword;
+            if (regmyntraUser[i].email === getCurrData.email) {
+              regmyntraUser[i].name = prevValue.name;
+              regmyntraUser[i].password = prevValue.password;
+              regmyntraUser[i].confirmPassword = prevValue.confirmPassword;
+              getCurrData.name = prevValue.name;
+              getCurrData.password = prevValue.password;
+              getCurrData.confirmPassword = prevValue.confirmPassword;
 
               login(getCurrData);
               localStorage.setItem(
@@ -77,7 +77,7 @@ const Profile = () => {
 
     if (getCurrData) {
       for (let i = 0; i < regmyntraUser.length; i++) {
-        if (regmyntraUser[i].myntraEmail === getCurrData.myntraEmail) {
+        if (regmyntraUser[i].email === getCurrData.email) {
           setPrevValue(regmyntraUser[i]);
         }
       }
@@ -124,7 +124,7 @@ const Profile = () => {
                 type="text"
                 onChange={updateProfileDetails}
                 placeholder="Update Name"
-                value={prevValue.myntraUser}
+                value={prevValue.name}
                 name="myntraUser"
               />
             </div>
@@ -133,7 +133,7 @@ const Profile = () => {
                 type="password"
                 onChange={updateProfileDetails}
                 placeholder="Update password"
-                value={prevValue.myntraPassword}
+                value={prevValue.password}
                 name="myntraPassword"
               />
             </div>
@@ -166,7 +166,7 @@ const Profile = () => {
                   fontSize: "1.2em",
                 }}
               >
-                {state?.currentuser?.myntraUser.toUpperCase()}
+                {state?.currentuser?.name.toUpperCase()}
               </p>
             )}
           </div>
@@ -226,7 +226,7 @@ const Profile = () => {
                           fontSize: "1.2em",
                         }}
                       >
-                        {state?.currentuser?.myntraUser.toUpperCase()}
+                        {state?.currentuser?.name.toUpperCase()}
                       </p>
                     )}
                     <p>xxxxxxxx968</p>
@@ -237,7 +237,7 @@ const Profile = () => {
                         fontSize: "1.2em",
                       }}
                     >
-                      {state?.currentuser?.myntraEmail.toUpperCase()}
+                      {state?.currentuser?.email.toUpperCase()}
                     </p>
                     <p>Male</p>
                     <p>dd//mm//yyy</p>

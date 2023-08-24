@@ -52,7 +52,7 @@ const ProfileDropDown = () => {
                   padding: "2% 3%",
                 }}
               >
-                {state?.currentuser?.myntraUser.toUpperCase()}
+                {state?.currentuser?.name.toUpperCase()}
               </span>
             </h4>
             <p>To access account and manage orders</p>

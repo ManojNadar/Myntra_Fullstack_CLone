@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import "../Styles/Register.css";
 import { NavLink } from "react-router-dom";
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import { MyntraContext } from "./Context/MyContext";
 
 const Register = () => {
   const [myntraReg, setMyntraReg] = useState({
@@ -17,7 +18,9 @@ const Register = () => {
     cart: [],
   });
 
-  // const router = useNavigate();
+  const route = useNavigate();
+
+  const { state } = useContext(MyntraContext);
 
   const handleInputs = (e) => {
     const { name, value } = e.target;
@@ -37,6 +40,17 @@ const Register = () => {
 
         if (response.data.success) {
           toast.success(response.data.message);
+          setMyntraReg({
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            role: "Buyer",
+          });
+
+          setTimeout(() => {
+            route("/login");
+          }, 800);
         } else {
           toast.error(response.data.message);
         }
@@ -47,6 +61,12 @@ const Register = () => {
       toast.error("all fields are mandatory");
     }
   };
+
+  useEffect(() => {
+    if (state?.currentuser?.name) {
+      route("/");
+    }
+  }, [state]);
 
   return (
     <>

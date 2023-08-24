@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { createContext, useEffect, useReducer } from "react";
 
 export const MyntraContext = createContext();
@@ -7,11 +8,13 @@ const reducer = (state, action) => {
   switch (action.type) {
     case "LOGIN":
       return {
+        ...state,
         currentuser: action.payload,
       };
 
     case "LOGOUT":
       return {
+        ...state,
         currentuser: null,
       };
 
@@ -24,29 +27,41 @@ const MyContext = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   // console.log(state);
 
-  const login = (userData) => {
-    localStorage.setItem("currentmyntrauser", JSON.stringify(userData));
+  const login = (userData, token) => {
+    localStorage.setItem("myntraToken", JSON.stringify(token));
     dispatch({
       type: "LOGIN",
       payload: userData,
     });
   };
   const logout = () => {
-    localStorage.removeItem("currentmyntrauser");
-
+    localStorage.removeItem("myntraToken");
     dispatch({
       type: "LOGOUT",
     });
   };
 
   useEffect(() => {
-    const getmyntraUser = JSON.parse(localStorage.getItem("currentmyntrauser"));
-    if (getmyntraUser) {
-      dispatch({
-        type: "LOGIN",
-        payload: getmyntraUser,
+    async function getCurremtUser() {
+      const token = JSON.parse(localStorage.getItem("myntraToken"));
+
+      const response = await axios.post("http://localhost:8000/currentuser", {
+        token,
       });
+
+      if (response.data.success) {
+        dispatch({
+          type: "LOGIN",
+          payload: response.data.user,
+        });
+      } else {
+        dispatch({
+          type: "LOGOUT",
+        });
+      }
     }
+
+    getCurremtUser();
   }, []);
 
   return (
@@ -59,3 +74,12 @@ const MyContext = ({ children }) => {
 };
 
 export default MyContext;
+// useEffect(() => {
+//   const getmyntraUser = JSON.parse(localStorage.getItem("currentmyntrauser"));
+//   if (getmyntraUser) {
+//     dispatch({
+//       type: "LOGIN",
+//       payload: getmyntraUser,
+//     });
+//   }
+// }, []);

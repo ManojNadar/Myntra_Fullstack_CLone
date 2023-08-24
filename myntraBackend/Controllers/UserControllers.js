@@ -1,96 +1,89 @@
-import User from "../Models/UserModel.js";
+import User from "../Models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
-// register ************************************
 
 export const Register = async (req, res) => {
   try {
     const { myntraReg } = req.body;
-
     const { name, email, password, confirmPassword, role } = myntraReg;
 
     if (!name || !email || !password || !confirmPassword || !role)
       return res.status(404).json({
         success: false,
-        message: "Please Fll all the fields",
+        message: "All fields are mandatory",
       });
 
     if (password !== confirmPassword)
       return res.status(404).json({
         success: false,
-        message: "password Doesnot Match",
+        message: "password doesnot match",
       });
 
-    const emailAlreadyExist = await User.find({ email });
+    const user = await User.find({ email });
 
-    if (emailAlreadyExist.length) {
+    if (user.length)
       return res.status(404).json({
         success: false,
-        message: "User already exist Please Try Login",
+        message: "user already exist please try login",
       });
-    }
 
-    const hashPassword = await bcrypt.hash(password, 10);
+    const hashpassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
       name,
       email,
-      password: hashPassword,
+      password: hashpassword,
     });
 
     await newUser.save();
 
     return res.status(201).json({
       success: true,
-      message: "user Registered SuccessFully",
+      message: "Registered Successfully",
       user: newUser,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "internal Server Error Register  From Catch block",
+      message: "error from catch block",
     });
   }
 };
 
-// Login ************************************
-
 export const Login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body.loginInput;
 
     if (!email && !password)
       return res.status(404).json({
         success: false,
-        message: "All Fileds are mandatory",
+        message: "All fields are mandatory",
       });
 
     const user = await User.findOne({ email });
+
     // console.log(user);
 
-    if (!user)
+    if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User not Found",
+        message: "user not found",
       });
+    }
+    const samePassword = await bcrypt.compare(password, user.password);
 
-    const samepassword = await bcrypt.compare(password, user.password);
-
-    if (samepassword) {
+    if (samePassword) {
       const userObj = {
         name: user.name,
         email: user.email,
         userId: user._id,
       };
-
       const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY);
-
       //   console.log(token);
 
       return res.status(200).json({
         success: true,
-        message: "Logged in success",
+        message: "Logged in Success",
         user: userObj,
         token: token,
       });
@@ -98,32 +91,30 @@ export const Login = async (req, res) => {
 
     return res.status(404).json({
       success: false,
-      message: "invalid Credentials",
+      message: "invalid credentials",
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "internal Server Error From Catch block",
+      message: "error from catch block",
     });
   }
 };
 
-// Currentuser ******************************************
-
-export const Currentuser = async (req, res) => {
+export const currentuser = async (req, res) => {
   try {
     const { token } = req.body;
 
     const decodeToken = jwt.verify(token, process.env.SECRET_KEY);
 
+    // console.log(decodeToken);
+
     if (!decodeToken) {
       return res.status(404).json({
         success: false,
-        message: "Token not Found",
+        message: "token is required",
       });
     }
-    // res.send(decodeToken);
-    // console.log(decodeToken);
 
     const userId = decodeToken?.userId;
 
@@ -132,31 +123,25 @@ export const Currentuser = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "user not found",
+        message: "user not Found",
       });
     }
 
-    // console.log(user);
-
-    const currentuserObj = {
+    const userObj = {
       name: user.name,
       email: user.email,
-      userid: user._id,
+      userId: user._id,
     };
 
     return res.status(200).json({
       success: true,
-      message: "Got Currentuser",
-      user: currentuserObj,
+      message: "Got Current user",
+      user: userObj,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "internal Server Error From Catch block",
+      message: "error from catch block",
     });
   }
-};
-
-export const Home = (req, res) => {
-  res.send("Home");
 };
