@@ -25,27 +25,31 @@ const Login = () => {
     const { email, password } = loginInput;
 
     if (email && password) {
-      const response = await axios.post("http://localhost:8000/login", {
-        loginInput,
-      });
-
-      if (response.data.success) {
-        const user = response.data.user;
-        const token = response.data.token;
-
-        await login(user, token);
-
-        toast.success(response.data.message);
-        setLoginInput({
-          email: "",
-          password: "",
+      try {
+        const response = await axios.post("http://localhost:8000/login", {
+          loginInput,
         });
 
-        setTimeout(() => {
-          route("/");
-        }, 1000);
-      } else {
-        toast.error(response.data.message);
+        if (response.data.success) {
+          const user = response.data.user;
+          const token = response.data.token;
+
+          await login(user, token);
+
+          toast.success(response.data.message);
+          setLoginInput({
+            email: "",
+            password: "",
+          });
+
+          setTimeout(() => {
+            route("/");
+          }, 1000);
+        } else {
+          toast.error(response.data.message);
+        }
+      } catch (error) {
+        console.log(error);
       }
     } else {
       toast.error("please fill all the fields");

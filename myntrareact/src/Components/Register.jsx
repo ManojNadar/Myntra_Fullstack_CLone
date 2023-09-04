@@ -10,11 +10,11 @@ import { MyntraContext } from "./Context/MyContext";
 
 const Register = () => {
   const [myntraReg, setMyntraReg] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    role: "Buyer",
+    myntraUser: "",
+    myntraEmail: "",
+    myntraPassword: "",
+    myntraCpassword: "",
+    myntraRole: "Buyer",
     cart: [],
   });
 
@@ -30,29 +30,45 @@ const Register = () => {
   const handleRegisterMyntra = async (e) => {
     e.preventDefault();
 
-    const { name, email, password, confirmPassword, role } = myntraReg;
+    const {
+      myntraUser,
+      myntraEmail,
+      myntraPassword,
+      myntraCpassword,
+      myntraRole,
+    } = myntraReg;
 
-    if (name && email && password && confirmPassword && role) {
-      if (password === confirmPassword) {
-        const response = await axios.post("http://localhost:8000/register", {
-          myntraReg,
-        });
-
-        if (response.data.success) {
-          toast.success(response.data.message);
-          setMyntraReg({
-            name: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            role: "Buyer",
+    if (
+      myntraUser &&
+      myntraEmail &&
+      myntraPassword &&
+      myntraCpassword &&
+      myntraRole
+    ) {
+      if (myntraPassword === myntraCpassword) {
+        try {
+          const response = await axios.post("http://localhost:8000/register", {
+            myntraReg,
           });
 
-          setTimeout(() => {
-            route("/login");
-          }, 800);
-        } else {
-          toast.error(response.data.message);
+          if (response.data.success) {
+            toast.success(response.data.message);
+            setMyntraReg({
+              myntraUser: "",
+              myntraEmail: "",
+              myntraPassword: "",
+              myntraCpassword: "",
+              myntraRole: "Buyer",
+            });
+
+            setTimeout(() => {
+              route("/login");
+            }, 800);
+          } else {
+            toast.error(response.data.message);
+          }
+        } catch (error) {
+          toast.error(error.response.data.message);
         }
       } else {
         toast.error("password Doesnot match");
@@ -63,7 +79,7 @@ const Register = () => {
   };
 
   useEffect(() => {
-    if (state?.currentuser?.name) {
+    if (state?.currentuser?.myntraUser) {
       route("/");
     }
   }, [state]);
@@ -105,29 +121,29 @@ const Register = () => {
                     type="text"
                     placeholder="User Name"
                     id="reg_userName"
-                    name="name"
+                    name="myntraUser"
                     onChange={handleInputs}
-                    value={myntraReg.name}
+                    value={myntraReg.myntraUser}
                   />
                 </div>
                 <div className="input-details">
                   <input
-                    name="email"
+                    name="myntraEmail"
                     type="email"
                     placeholder="user Email"
                     id="reg_Email"
                     onChange={handleInputs}
-                    value={myntraReg.email}
+                    value={myntraReg.myntraEmail}
                   />
                 </div>
                 <div className="input-details">
                   <input
-                    name="password"
+                    name="myntraPassword"
                     type="password"
                     placeholder="*************"
                     id="reg_Password"
                     onChange={handleInputs}
-                    value={myntraReg.password}
+                    value={myntraReg.myntraPassword}
                   />
                 </div>
                 <div className="input-details">
@@ -135,16 +151,16 @@ const Register = () => {
                     type="password"
                     placeholder="*************"
                     id="reg_Cpassword"
-                    name="confirmPassword"
+                    name="myntraCpassword"
                     onChange={handleInputs}
-                    value={myntraReg.confirmPassword}
+                    value={myntraReg.myntraCpassword}
                   />
                 </div>
                 <div className="input-details">
                   <select
-                    value={myntraReg.role}
+                    value={myntraReg.myntraRole}
                     onChange={handleInputs}
-                    name="role"
+                    name="myntraRole"
                   >
                     <option value="">BUYER OR SELLER</option>
                     <option value="Buyer">Buyer</option>
@@ -180,88 +196,3 @@ const Register = () => {
 };
 
 export default Register;
-
-// const [myntraReg, setMyntraReg] = useState({
-//   myntraUser: "",
-//   myntraEmail: "",
-//   myntraPassword: "",
-//   myntraCpassword: "",
-//   myntraRole: "Buyer",
-//   cart: [],
-// });
-
-// const route = useNavigate();
-
-// useEffect(() => {
-//   const getmyntraUser = JSON.parse(localStorage.getItem("currentmyntrauser"));
-
-//   if (getmyntraUser) {
-//     route("/");
-//   }
-// }, []);
-
-// const handleInputs = (e) => {
-//   const { name, value } = e.target;
-
-//   setMyntraReg({ ...myntraReg, [name]: value });
-// };
-
-// const {
-//   myntraUser,
-//   myntraEmail,
-//   myntraPassword,
-//   myntraCpassword,
-//   myntraRole,
-// } = myntraReg;
-// const handleRegisterMyntra = async (e) => {
-//   e.preventDefault();
-
-//   if (
-//     myntraUser &&
-//     myntraEmail &&
-//     myntraPassword &&
-//     myntraCpassword &&
-//     myntraRole
-//   ) {
-//     if (myntraPassword.length > 3) {
-//       if (myntraPassword === myntraCpassword) {
-//         // **************// localstorage setup //*************************** */
-//         let getMyntraRegUser =
-//           JSON.parse(localStorage.getItem("myntraRegUser")) || [];
-//         let flag = false;
-//         for (let i = 0; i < getMyntraRegUser.length; i++) {
-//           if (getMyntraRegUser[i].myntraEmail === myntraReg.myntraEmail) {
-//             flag = true;
-//           }
-//         }
-//         if (!flag) {
-//           let regUSerObj = {
-//             ...myntraReg,
-//           };
-//           getMyntraRegUser.push(regUSerObj);
-//           localStorage.setItem(
-//             "myntraRegUser",
-//             JSON.stringify(getMyntraRegUser)
-//           );
-//           toast.success("successfully registered");
-//           setMyntraReg({
-//             myntraUser: "",
-//             myntraEmail: "",
-//             myntraPassword: "",
-//             myntraCpassword: "",
-//             myntraRole: "",
-//           });
-//           route("/login");
-//         } else {
-//           toast.warn("detail already registered please try login ");
-//         }
-//       } else {
-//         toast.error("password doesnot match");
-//       }
-//     } else {
-//       toast.error("password must contain 3 or more characters");
-//     }
-//   } else {
-//     toast.error("please fill all the fields");
-//   }
-// };

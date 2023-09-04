@@ -25,7 +25,8 @@ const reducer = (state, action) => {
 
 const MyContext = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  // console.log(state);
+
+  console.log(state);
 
   const login = (userData, token) => {
     localStorage.setItem("myntraToken", JSON.stringify(token));
@@ -45,19 +46,23 @@ const MyContext = ({ children }) => {
     async function getCurremtUser() {
       const token = JSON.parse(localStorage.getItem("myntraToken"));
 
-      const response = await axios.post("http://localhost:8000/currentuser", {
-        token,
-      });
+      try {
+        const response = await axios.post("http://localhost:8000/currentuser", {
+          token,
+        });
 
-      if (response.data.success) {
-        dispatch({
-          type: "LOGIN",
-          payload: response.data.user,
-        });
-      } else {
-        dispatch({
-          type: "LOGOUT",
-        });
+        if (response.data.success) {
+          dispatch({
+            type: "LOGIN",
+            payload: response.data.user,
+          });
+        } else {
+          dispatch({
+            type: "LOGOUT",
+          });
+        }
+      } catch (error) {
+        console.log(error);
       }
     }
 

@@ -12,6 +12,7 @@ const Profile = () => {
   const [prevValue, setPrevValue] = useState({});
 
   // console.log(prevValue);
+
   const route = useNavigate();
   const { state, login } = useContext(MyntraContext);
 
@@ -85,12 +86,11 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    const getmyntraUser = JSON.parse(localStorage.getItem("currentmyntrauser"));
-
-    if (!getmyntraUser) {
+    const token = JSON.parse(localStorage.getItem("myntraToken"));
+    if (!token) {
       route("/");
     }
-  }, [state]);
+  }, []);
 
   return (
     <>
@@ -166,7 +166,7 @@ const Profile = () => {
                   fontSize: "1.2em",
                 }}
               >
-                {state?.currentuser?.name.toUpperCase()}
+                {state?.currentuser?.myntraUser}
               </p>
             )}
           </div>
@@ -226,7 +226,7 @@ const Profile = () => {
                           fontSize: "1.2em",
                         }}
                       >
-                        {state?.currentuser?.name.toUpperCase()}
+                        {state?.currentuser?.myntraUser}
                       </p>
                     )}
                     <p>xxxxxxxx968</p>
@@ -237,7 +237,7 @@ const Profile = () => {
                         fontSize: "1.2em",
                       }}
                     >
-                      {state?.currentuser?.email.toUpperCase()}
+                      {state?.currentuser?.myntraEmail}
                     </p>
                     <p>Male</p>
                     <p>dd//mm//yyy</p>
@@ -250,7 +250,7 @@ const Profile = () => {
                           fontSize: "1.2em",
                         }}
                       >
-                        {state?.currentuser?.myntraRole.toUpperCase()}
+                        {state?.currentuser?.myntraRole}
                       </p>
                     )}
                     <p>Mano</p>

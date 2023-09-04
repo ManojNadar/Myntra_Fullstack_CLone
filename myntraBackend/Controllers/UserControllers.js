@@ -4,48 +4,57 @@ import jwt from "jsonwebtoken";
 
 export const Register = async (req, res) => {
   try {
-    const { myntraReg } = req.body;
-    const { name, email, password, confirmPassword, role } = myntraReg;
+    const {
+      myntraUser,
+      myntraEmail,
+      myntraPassword,
+      myntraCpassword,
+      myntraRole,
+    } = req.body.myntraReg;
 
-    if (!name || !email || !password || !confirmPassword || !role)
+    if (
+      !myntraUser ||
+      !myntraEmail ||
+      !myntraPassword ||
+      !myntraCpassword ||
+      !myntraRole
+    ) {
       return res.status(404).json({
         success: false,
-        message: "All fields are mandatory",
+        message: "please fill all the fields ",
       });
+    }
 
-    if (password !== confirmPassword)
+    const emailExist = await User.find({ myntraEmail: myntraEmail });
+
+    console.log(emailExist);
+
+    if (emailExist?.length) {
       return res.status(404).json({
         success: false,
-        message: "password doesnot match",
+        message: "email already exists ",
       });
+    }
 
-    const user = await User.find({ email });
+    const hashPassword = await bcrypt.hash(myntraPassword, 10);
 
-    if (user.length)
-      return res.status(404).json({
-        success: false,
-        message: "user already exist please try login",
-      });
-
-    const hashpassword = await bcrypt.hash(password, 10);
-
-    const newUser = new User({
-      name,
-      email,
-      password: hashpassword,
+    const user = new User({
+      myntraUser,
+      myntraEmail,
+      myntraPassword: hashPassword,
+      myntraRole,
     });
 
-    await newUser.save();
+    await user.save();
 
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
-      message: "Registered Successfully",
-      user: newUser,
+      message: "Registered Successs ",
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "error from catch block",
+      message: "internal error",
     });
   }
 };
@@ -53,6 +62,7 @@ export const Register = async (req, res) => {
 export const Login = async (req, res) => {
   try {
     const { email, password } = req.body.loginInput;
+    console.log(email, password);
 
     if (!email && !password)
       return res.status(404).json({
@@ -60,9 +70,9 @@ export const Login = async (req, res) => {
         message: "All fields are mandatory",
       });
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ myntraEmail: email });
 
-    // console.log(user);
+    console.log(user);
 
     if (!user) {
       return res.status(404).json({
@@ -70,12 +80,12 @@ export const Login = async (req, res) => {
         message: "user not found",
       });
     }
-    const samePassword = await bcrypt.compare(password, user.password);
+    const samePassword = await bcrypt.compare(password, user.myntraPassword);
 
     if (samePassword) {
       const userObj = {
-        name: user.name,
-        email: user.email,
+        myntraUser: user.myntraUser,
+        myntraEmail: user.myntraEmail,
         userId: user._id,
       };
       const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY);
@@ -128,8 +138,8 @@ export const currentuser = async (req, res) => {
     }
 
     const userObj = {
-      name: user.name,
-      email: user.email,
+      myntraUser: user.myntraUser,
+      myntraEmail: user.myntraEmail,
       userId: user._id,
     };
 

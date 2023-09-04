@@ -52,14 +52,14 @@ const ProfileDropDown = () => {
                   padding: "2% 3%",
                 }}
               >
-                {state?.currentuser?.name.toUpperCase()}
+                {state?.currentuser?.myntraUser}
               </span>
             </h4>
             <p>To access account and manage orders</p>
           </div>
         )}
         <div>
-          {state?.currentuser?.myntraRole === "Seller" ? (
+          {state?.currentuser?.role === "Seller" ? (
             <h4
               onClick={() => route("/addproduct")}
               style={{

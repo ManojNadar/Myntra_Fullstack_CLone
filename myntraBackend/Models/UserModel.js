@@ -1,19 +1,19 @@
 import mongoose, { Schema } from "mongoose";
 
 const userSchema = new Schema({
-  name: {
+  myntraUser: {
     type: String,
     required: true,
   },
-  email: {
+  myntraEmail: {
     type: String,
     required: true,
   },
-  password: {
+  myntraPassword: {
     type: String,
     required: true,
   },
-  role: {
+  myntraRole: {
     type: String,
     enum: ["Buyer", "Seller", "Admin"],
     default: "Buyer",
