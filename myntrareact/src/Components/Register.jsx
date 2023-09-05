@@ -10,13 +10,16 @@ import { MyntraContext } from "./Context/MyContext";
 
 const Register = () => {
   const [myntraReg, setMyntraReg] = useState({
-    myntraUser: "",
-    myntraEmail: "",
-    myntraPassword: "",
-    myntraCpassword: "",
-    myntraRole: "Buyer",
+    name: "",
+    email: "",
+    number: "",
+    password: "",
+    confirmPassword: "",
+    role: "Buyer",
     cart: [],
   });
+
+  console.log(myntraReg);
 
   const route = useNavigate();
 
@@ -30,22 +33,10 @@ const Register = () => {
   const handleRegisterMyntra = async (e) => {
     e.preventDefault();
 
-    const {
-      myntraUser,
-      myntraEmail,
-      myntraPassword,
-      myntraCpassword,
-      myntraRole,
-    } = myntraReg;
+    const { name, email, password, confirmPassword, role } = myntraReg;
 
-    if (
-      myntraUser &&
-      myntraEmail &&
-      myntraPassword &&
-      myntraCpassword &&
-      myntraRole
-    ) {
-      if (myntraPassword === myntraCpassword) {
+    if (name && email && password && confirmPassword && role) {
+      if (password === confirmPassword) {
         try {
           const response = await axios.post("http://localhost:8000/register", {
             myntraReg,
@@ -54,11 +45,12 @@ const Register = () => {
           if (response.data.success) {
             toast.success(response.data.message);
             setMyntraReg({
-              myntraUser: "",
-              myntraEmail: "",
-              myntraPassword: "",
-              myntraCpassword: "",
-              myntraRole: "Buyer",
+              name: "",
+              email: "",
+              number: "",
+              password: "",
+              confirmPassword: "",
+              role: "Buyer",
             });
 
             setTimeout(() => {
@@ -69,6 +61,7 @@ const Register = () => {
           }
         } catch (error) {
           toast.error(error.response.data.message);
+          console.log(error.response.data.message);
         }
       } else {
         toast.error("password Doesnot match");
@@ -79,7 +72,7 @@ const Register = () => {
   };
 
   useEffect(() => {
-    if (state?.currentuser?.myntraUser) {
+    if (state?.currentuser?.name) {
       route("/");
     }
   }, [state]);
@@ -121,46 +114,57 @@ const Register = () => {
                     type="text"
                     placeholder="User Name"
                     id="reg_userName"
-                    name="myntraUser"
+                    name="name"
                     onChange={handleInputs}
-                    value={myntraReg.myntraUser}
+                    value={myntraReg.name}
                   />
                 </div>
                 <div className="input-details">
                   <input
-                    name="myntraEmail"
+                    name="email"
                     type="email"
                     placeholder="user Email"
                     id="reg_Email"
                     onChange={handleInputs}
-                    value={myntraReg.myntraEmail}
+                    value={myntraReg.email}
                   />
                 </div>
                 <div className="input-details">
                   <input
-                    name="myntraPassword"
+                    type="number"
+                    placeholder="Phone"
+                    id="reg_Number"
+                    name="number"
+                    onChange={handleInputs}
+                    value={myntraReg.number}
+                  />
+                </div>
+                <div className="input-details">
+                  <input
+                    name="password"
                     type="password"
                     placeholder="*************"
                     id="reg_Password"
                     onChange={handleInputs}
-                    value={myntraReg.myntraPassword}
+                    value={myntraReg.password}
                   />
                 </div>
+
                 <div className="input-details">
                   <input
                     type="password"
                     placeholder="*************"
                     id="reg_Cpassword"
-                    name="myntraCpassword"
+                    name="confirmPassword"
                     onChange={handleInputs}
-                    value={myntraReg.myntraCpassword}
+                    value={myntraReg.confirmPassword}
                   />
                 </div>
                 <div className="input-details">
                   <select
-                    value={myntraReg.myntraRole}
+                    value={myntraReg.role}
                     onChange={handleInputs}
-                    name="myntraRole"
+                    name="role"
                   >
                     <option value="">BUYER OR SELLER</option>
                     <option value="Buyer">Buyer</option>

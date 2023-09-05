@@ -52,7 +52,7 @@ const ProfileDropDown = () => {
                   padding: "2% 3%",
                 }}
               >
-                {state?.currentuser?.myntraUser}
+                {state?.currentuser?.name}
               </span>
             </h4>
             <p>To access account and manage orders</p>
@@ -85,7 +85,7 @@ const ProfileDropDown = () => {
           <p>Saved Addresses</p>
         </div>
 
-        {state?.currentuser && (
+        {state?.currentuser?.name && (
           <div className="logout_login">
             {/* <p>Edit Profile</p> */}
             <button onClick={logoutUser}>Logout</button>

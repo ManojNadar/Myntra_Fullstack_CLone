@@ -166,7 +166,7 @@ const Profile = () => {
                   fontSize: "1.2em",
                 }}
               >
-                {state?.currentuser?.myntraUser}
+                {state?.currentuser?.name}
               </p>
             )}
           </div>
@@ -226,7 +226,7 @@ const Profile = () => {
                           fontSize: "1.2em",
                         }}
                       >
-                        {state?.currentuser?.myntraUser}
+                        {state?.currentuser?.name}
                       </p>
                     )}
                     <p>xxxxxxxx968</p>
@@ -237,7 +237,7 @@ const Profile = () => {
                         fontSize: "1.2em",
                       }}
                     >
-                      {state?.currentuser?.myntraEmail}
+                      {state?.currentuser?.email}
                     </p>
                     <p>Male</p>
                     <p>dd//mm//yyy</p>
@@ -250,7 +250,7 @@ const Profile = () => {
                           fontSize: "1.2em",
                         }}
                       >
-                        {state?.currentuser?.myntraRole}
+                        {state?.currentuser?.role}
                       </p>
                     )}
                     <p>Mano</p>

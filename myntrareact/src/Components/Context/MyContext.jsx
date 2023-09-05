@@ -56,10 +56,6 @@ const MyContext = ({ children }) => {
             type: "LOGIN",
             payload: response.data.user,
           });
-        } else {
-          dispatch({
-            type: "LOGOUT",
-          });
         }
       } catch (error) {
         console.log(error);
@@ -79,12 +75,3 @@ const MyContext = ({ children }) => {
 };
 
 export default MyContext;
-// useEffect(() => {
-//   const getmyntraUser = JSON.parse(localStorage.getItem("currentmyntrauser"));
-//   if (getmyntraUser) {
-//     dispatch({
-//       type: "LOGIN",
-//       payload: getmyntraUser,
-//     });
-//   }
-// }, []);
