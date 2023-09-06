@@ -298,13 +298,11 @@ export const editProfile = async (req, res) => {
 
     if (user) {
       await user.save();
-      return res
-        .status(200)
-        .json({
-          success: true,
-          message: "Profile updated Success",
-          updateUser: user,
-        });
+      return res.status(200).json({
+        success: true,
+        message: "Profile updated Success",
+        updateUser: user,
+      });
     }
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
