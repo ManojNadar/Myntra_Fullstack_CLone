@@ -281,19 +281,31 @@ export const editProfile = async (req, res) => {
 
     const hashPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.findById(userId);
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { name, password: hashPassword },
+      { new: true }
+    );
+
+    // if (user) {
+    //   user.name = name;
+    //   user.password = hashPassword;
+    //   await user.save();
+    //   return res
+    //     .status(200)
+    //     .json({ success: true, message: "Profile updated Success" });
+    // }
 
     if (user) {
-      user.name = name;
-      user.password = hashPassword;
       await user.save();
       return res
         .status(200)
-        .json({ success: true, message: "Profile updated Success" });
+        .json({
+          success: true,
+          message: "Profile updated Success",
+          updateUser: user,
+        });
     }
-
-
-    
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }

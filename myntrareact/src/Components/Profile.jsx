@@ -40,6 +40,8 @@ const Profile = () => {
         });
 
         if (response.data.success) {
+          const userData = response.data.updateUser;
+          login(userData, token);
           toast.success(response.data.message);
           setProfileModal(false);
         }
@@ -57,19 +59,6 @@ const Profile = () => {
   const closeProfileModal = () => {
     setProfileModal(false);
   };
-
-  useEffect(() => {
-    const getCurrData = JSON.parse(localStorage.getItem("currentmyntrauser"));
-    const regmyntraUser = JSON.parse(localStorage.getItem("myntraRegUser"));
-
-    if (getCurrData) {
-      for (let i = 0; i < regmyntraUser.length; i++) {
-        if (regmyntraUser[i].email === getCurrData.email) {
-          setPrevValue(regmyntraUser[i]);
-        }
-      }
-    }
-  }, []);
 
   useEffect(() => {
     if (!state?.currentuser?.name) {

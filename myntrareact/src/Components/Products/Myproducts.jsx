@@ -64,7 +64,6 @@ const Myproducts = () => {
         pauseOnHover
         theme="dark"
       />
-
       <div className="myProductsContainer">
         <h1 style={{ textAlign: "center" }}>My Products</h1>
 
@@ -76,7 +75,7 @@ const Myproducts = () => {
                   <img src={prod.image} alt="" />
                 </div>
                 <div className="myProductsDetails">
-                  <h2>{prod.title}</h2>
+                  <h2>{prod.title.slice(0, 20)}...</h2>
                   <h2>Rs.{prod.price}</h2>
                   <h2>{prod.category}</h2>
                   <div className="updateBtn">
