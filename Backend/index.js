@@ -81,6 +81,7 @@ app.post("/get-cart-products", getCartProducts);
 app.post("/buyproduct", buyProduct);
 
 app.post("/delete-cart-product", deleteCartProduct);
+
 app.post("/addishlist", addWishList);
 app.post("/getwishlist", getWishList);
 

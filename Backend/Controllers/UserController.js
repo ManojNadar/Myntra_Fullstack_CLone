@@ -287,15 +287,6 @@ export const editProfile = async (req, res) => {
       { new: true }
     );
 
-    // if (user) {
-    //   user.name = name;
-    //   user.password = hashPassword;
-    //   await user.save();
-    //   return res
-    //     .status(200)
-    //     .json({ success: true, message: "Profile updated Success" });
-    // }
-
     if (user) {
       await user.save();
       return res.status(200).json({
