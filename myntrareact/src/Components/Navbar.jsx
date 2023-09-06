@@ -112,7 +112,7 @@ const Navbar = () => {
               </small>
             </p>
           </div>
-          {state?.currentuser?.myntraRole === "Buyer" ? (
+          {state?.currentuser?.role === "Buyer" ? (
             <div>
               <NavLink to="/cart">
                 <BsBag />

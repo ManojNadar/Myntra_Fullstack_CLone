@@ -86,11 +86,10 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("myntraToken"));
-    if (!token) {
+    if (!state?.currentuser?.name) {
       route("/");
     }
-  }, []);
+  }, [state]);
 
   return (
     <>

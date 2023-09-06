@@ -6,7 +6,7 @@
 
 .addProductSection {
   width: 40%;
-  height: 70%;
+  height: 65%;
   background-image: linear-gradient(green, yellow);
   position: fixed;
   left: 30%;
@@ -15,7 +15,7 @@
 }
 .addProductSection > form > div {
   width: 80%;
-  margin: 4% auto;
+  margin: 8% auto;
 }
 .addProductSection > form > div > input {
   width: 100%;

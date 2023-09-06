@@ -112,7 +112,7 @@ const Login = () => {
                 onChange={handleLoginInput}
               />
 
-              <div id="btn">
+              <div className="btn">
                 <button type="submit" value="Login">
                   Login
                 </button>
@@ -151,67 +151,3 @@ const Login = () => {
 };
 
 export default Login;
-
-// const [loginInput, setLoginInput] = useState({
-//   email: "",
-//   password: "",
-// });
-// const route = useNavigate();
-// const { login } = useContext(MyntraContext);
-
-// useEffect(() => {
-//   const getmyntraUser = JSON.parse(localStorage.getItem("currentmyntrauser"));
-
-//   if (getmyntraUser) {
-//     route("/");
-//   }
-// }, []);
-
-// const handleLoginInput = (e) => {
-//   const { name, value } = e.target;
-//   setLoginInput({ ...loginInput, [name]: value });
-// };
-
-// const { email, password } = loginInput;
-
-// const handleLoginSubmit = (e) => {
-//   e.preventDefault();
-
-//   if (email && password) {
-//     const myntraRegUser = JSON.parse(localStorage.getItem("myntraRegUser"));
-
-//     let flag = false;
-//     let currentuser;
-//     for (let i = 0; i < myntraRegUser.length; i++) {
-//       if (
-//         myntraRegUser[i].email === email &&
-//         myntraRegUser[i].password === password
-//       ) {
-//         flag = true;
-//         currentuser = myntraRegUser[i];
-//       }
-//     }
-
-//     if (flag) {
-//       // localStorage.setItem("currentmyntrauser", JSON.stringify(currentuser));
-//       login(currentuser);
-//       toast.success("logged in success");
-//       setLoginInput({
-//         email: "",
-//         password: "",
-//       });
-
-//       setTimeout(() => {
-//         route("/");
-//       }, 700);
-//     } else {
-//       toast.warn("invalid credentials");
-//       setLoginInput({
-//         email: "",
-//         password: "",
-//       });
-//     }
-//   } else {
-//     toast.error("please fill all the fields");
-//   }
-// };

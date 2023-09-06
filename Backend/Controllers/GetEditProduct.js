@@ -4,6 +4,8 @@ export const GetEditProduct = async (req, res) => {
   try {
     const { productId } = req.body;
 
+    console.log(productId);
+
     if (!productId)
       return res.status(404).json({
         success: false,
@@ -15,7 +17,7 @@ export const GetEditProduct = async (req, res) => {
     if (findProduct) {
       return res.status(200).json({
         success: true,
-        singleProduct: findProduct,
+        singleProductInputData: findProduct,
       });
     }
   } catch (error) {

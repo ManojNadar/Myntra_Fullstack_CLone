@@ -5,6 +5,7 @@ import myntralogo from "../Assets/myntra.png";
 import { MyntraContext } from "./Context/MyContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 const Cart = () => {
   const [cartItem, setCartItem] = useState([]);
@@ -14,59 +15,76 @@ const Cart = () => {
   const route = useNavigate();
 
   useEffect(() => {
-    if (state?.currentuser?.myntraRole === "Seller") {
+    if (state?.currentuser?.role === "Seller") {
       route("/");
     }
   }, [state?.currentuser]);
 
   useEffect(() => {
-    const regUser = JSON.parse(localStorage.getItem("myntraRegUser"));
+    async function getCartProucts() {
+      try {
+        const token = JSON.parse(localStorage.getItem("myntraToken"));
+        const response = await axios.post(
+          "http://localhost:8000/get-cart-products",
+          { token }
+        );
 
-    if (state?.currentuser) {
-      for (let i = 0; i < regUser.length; i++) {
-        if (regUser[i].myntraEmail === state?.currentuser?.myntraEmail) {
-          setCartItem(regUser[i].cart);
+        if (response.data.success) {
+          setCartItem(response.data.product);
         }
+      } catch (error) {
+        console.log(error);
       }
     }
-  }, [state]);
+
+    getCartProucts();
+  }, []);
 
   useEffect(() => {
     if (cartItem?.length) {
       let sum = 0;
       for (let i = 0; i < cartItem.length; i++) {
-        sum += parseInt(cartItem[i].prodPrice);
+        sum += parseInt(cartItem[i].price);
       }
       setTotalPrice(sum);
     }
   }, [cartItem]);
 
-  const removeSingleProduct = (id) => {
-    const regUser = JSON.parse(localStorage.getItem("myntraRegUser"));
+  const removeSingleProduct = async (productId) => {
+    try {
+      const token = JSON.parse(localStorage.getItem("myntraToken"));
 
-    if (state?.currentuser) {
-      const filteredProduc = cartItem.filter((e) => e.id !== id);
-      for (let i = 0; i < regUser.length; i++) {
-        if (regUser[i].myntraEmail === state?.currentuser?.myntraEmail) {
-          setCartItem(filteredProduc);
-          regUser[i].cart = filteredProduc;
-          localStorage.setItem("myntraRegUser", JSON.stringify(regUser));
-          toast.info("product removed");
+      const response = await axios.post(
+        "http://localhost:8000/delete-cart-product",
+        {
+          productId,
+          token,
         }
+      );
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setCartItem(response.data.products);
       }
+    } catch (error) {
+      toast.error(error.response.data.message);
     }
   };
 
-  const placeOrder = () => {
-    const regUser = JSON.parse(localStorage.getItem("myntraRegUser"));
-    for (let i = 0; i < regUser.length; i++) {
-      if (regUser[i].myntraEmail === state?.currentuser?.myntraEmail) {
-        regUser[i].cart = [];
+  const placeOrder = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem("myntraToken"));
+
+      const response = await axios.post("http://localhost:8000/buyproduct", {
+        token,
+      });
+
+      if (response.data.success) {
+        toast.success(response.data.message);
         setCartItem([]);
-        setTotalPrice(0);
-        localStorage.setItem("myntraRegUser", JSON.stringify(regUser));
-        toast.success("order placed Successfully");
       }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -125,17 +143,17 @@ const Cart = () => {
               <div id="left-3"></div>
               {cartItem.length > 0 &&
                 cartItem.map((item) => (
-                  <div id="left-4" key={item.id}>
+                  <div id="left-4" key={item._id}>
                     <i
-                      onClick={() => removeSingleProduct(item.id)}
+                      onClick={() => removeSingleProduct(item._id)}
                       className="fa-solid fa-xmark fa-xl"
                     ></i>
                     <div id="cart-img">
-                      <img src={item.prodImg} alt="" />
+                      <img src={item.image} alt="" />
                     </div>
                     <div id="cart-details">
                       <div className="detail-desc">
-                        <h4>{item.prodTitle}</h4>
+                        <h4>{item.title}</h4>
                         <p>{item.prodBrand}</p>
                         <p>{item.prodTitle}</p>
                       </div>
@@ -146,7 +164,7 @@ const Cart = () => {
                       </div>
                       <div className="detail-desc">
                         <p>
-                          <b> Rs {item.prodPrice}</b>
+                          <b> Rs {item.price}</b>
                           <span> {item.prodOffer}% OFF </span>
                         </p>
                         <p>

@@ -9,6 +9,8 @@ export const UpdateProduct = async (req, res) => {
 
     const { token, productId } = req.body;
 
+    console.log(token, productId);
+
     const decodeToken = jwt.verify(token, process.env.SECRET_KEY);
 
     if (!decodeToken) {
@@ -27,7 +29,7 @@ export const UpdateProduct = async (req, res) => {
         { new: true }
       );
 
-      console.log(updateProduct);
+      // console.log(updateProduct);
 
       res.status(200).json({
         success: true,

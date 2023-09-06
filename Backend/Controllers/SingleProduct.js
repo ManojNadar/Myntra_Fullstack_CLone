@@ -1,14 +1,14 @@
 import Product from "../Model/ProductModel.js";
 
 export const SingleProduct = async (req, res) => {
-  const { singleprodId } = req.body;
-
-  if (!singleprodId)
+  const { productId } = req.body;
+  // console.log(id);
+  if (!productId)
     return res.status(404).json({
       success: false,
       message: "product id is required",
     });
-  const product = await Product.findById(singleprodId);
+  const product = await Product.findById(productId);
 
   if (product) {
     return res.status(200).json({

@@ -1,77 +1,69 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Navbar from "../Navbar";
 import "../../Styles/AddProduct.css";
 import { v4 as uid } from "uuid";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { MyntraContext } from "../Context/MyContext";
+import axios from "axios";
 
 const AddProduct = () => {
   const [product, setProduct] = useState({
-    prodTitle: "",
-    prodBrand: "",
-    prodPrice: "",
-    prodOffer: "",
-    prodImg: "",
+    title: "",
+    price: "",
+    image: "",
     prodDiscount: "",
-    prodCategory: "",
+    category: "",
   });
   const route = useNavigate();
+
+  const { state } = useContext(MyntraContext);
 
   const handleProductDetails = (e) => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
   };
 
-  const handleProductSubmit = (e) => {
+  const handleProductSubmit = async (e) => {
     e.preventDefault();
-    const {
-      prodTitle,
-      prodBrand,
-      prodPrice,
-      prodOffer,
-      prodImg,
-      prodDiscount,
-      prodCategory,
-    } = product;
+    const { title, price, image, category } = product;
 
-    if (
-      prodTitle &&
-      prodBrand &&
-      prodPrice &&
-      prodOffer &&
-      prodImg &&
-      prodDiscount &&
-      prodCategory
-    ) {
-      const getProduct =
-        JSON.parse(localStorage.getItem("myntraproducts")) || [];
+    if (title && price && image && category) {
+      try {
+        const token = JSON.parse(localStorage.getItem("myntraToken"));
+        const response = await axios.post("http://localhost:8000/addproduct", {
+          product,
+          token,
+        });
 
-      const productObj = {
-        ...product,
-        id: uid(),
-      };
-
-      getProduct.push(productObj);
-      localStorage.setItem("myntraproducts", JSON.stringify(getProduct));
-      toast.success("product added");
-      setProduct({
-        prodTitle: "",
-        prodBrand: "",
-        prodPrice: "",
-        prodOffer: "",
-        prodImg: "",
-        prodDiscount: "",
-        prodCategory: "",
-      });
-
-      // setTimeout(() => {
-      //   route("/allproducts");
-      // }, 700);
+        if (response.data.success) {
+          setProduct(response.data.productDetails);
+          setTimeout(() => {
+            route("/myproducts");
+          }, 500);
+          toast.success(response.data.message);
+          setProduct({
+            title: "",
+            price: "",
+            image: "",
+            prodDiscount: "",
+            category: "",
+          });
+        }
+      } catch (error) {
+        console.log(error.response.data.message);
+      }
     } else {
       toast.error("please fill all the product details");
     }
   };
+
+  useEffect(() => {
+    if (!state?.currentuser?.name) {
+      route("/");
+    }
+  }, [state]);
 
   return (
     <>
@@ -93,63 +85,39 @@ const AddProduct = () => {
           <form onSubmit={handleProductSubmit}>
             <div>
               <input
-                name="prodTitle"
-                value={product.prodTitle}
+                name="title"
+                value={product.title}
                 type="text"
                 placeholder="Product Title"
                 onChange={handleProductDetails}
               />
             </div>
+
             <div>
               <input
-                name="prodBrand"
-                value={product.prodBrand}
-                type="text"
-                placeholder="Product Brand"
-                onChange={handleProductDetails}
-              />
-            </div>
-            <div>
-              <input
-                name="prodPrice"
-                value={product.prodPrice}
+                name="price"
+                value={product.price}
                 type="number"
                 placeholder="Product Price"
                 onChange={handleProductDetails}
               />
             </div>
+
             <div>
               <input
-                name="prodOffer"
-                value={product.prodOffer}
-                type="number"
-                placeholder="Product Offer"
-                onChange={handleProductDetails}
-              />
-            </div>
-            <div>
-              <input
-                name="prodImg"
-                value={product.prodImg}
+                name="image"
+                value={product.image}
                 type="text"
                 placeholder="Product Image Url"
                 onChange={handleProductDetails}
               />
             </div>
-            <div>
-              <input
-                name="prodDiscount"
-                type="number"
-                placeholder="Product Discount"
-                value={product.prodDiscount}
-                onChange={handleProductDetails}
-              />
-            </div>
+
             <div>
               <select
                 onChange={handleProductDetails}
-                name="prodCategory"
-                value={product.prodCategory}
+                name="category"
+                value={product.category}
               >
                 <option value="">SELECT CATEGORY</option>
                 <option value="Mens">Mens</option>

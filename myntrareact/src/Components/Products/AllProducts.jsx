@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Navbar from "../Navbar";
 import "../../Styles/AllProducts.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import loader from "../../Assets/gifs/loader.gif";
 
 const AllProducts = () => {
   const [allproducts, setAllProducts] = useState([]);
@@ -9,45 +11,59 @@ const AllProducts = () => {
   // console.log(allproducts);
 
   useEffect(() => {
-    const getProducts = JSON.parse(localStorage.getItem("myntraproducts"));
-    if (getProducts) {
-      setAllProducts(getProducts);
+    async function allProducts() {
+      try {
+        const response = await axios.get("http://localhost:8000/getproducts");
+
+        if (response.data.success) {
+          setAllProducts(response.data.allProducts);
+        }
+      } catch (error) {
+        console.log(error.response.data.message);
+      }
     }
+
+    allProducts();
   }, []);
 
-  const handleCategoryChange = (e) => {
+  const handleCategoryChange = async (e) => {
     const { value } = e.target;
 
-    const getAllProduct = JSON.parse(localStorage.getItem("myntraproducts"));
+    try {
+      const response = await axios.get("http://localhost:8000/getproducts");
 
-    if (value === "Mens") {
-      const filterProduct = getAllProduct.filter(
-        (e) => e.prodCategory === "Mens"
-      );
-      setAllProducts(filterProduct);
-    } else if (value === "Womens") {
-      const filterProduct = getAllProduct.filter(
-        (e) => e.prodCategory === "Womens"
-      );
-      setAllProducts(filterProduct);
-    } else if (value === "Kids") {
-      const filterProduct = getAllProduct.filter(
-        (e) => e.prodCategory === "Kids"
-      );
-      setAllProducts(filterProduct);
-    } else if (value === "Home") {
-      const filterProduct = getAllProduct.filter(
-        (e) => e.prodCategory === "Home"
-      );
-      setAllProducts(filterProduct);
-    }
-    else if (value === "Beauty") {
-      const filterProduct = getAllProduct.filter(
-        (e) => e.prodCategory === "Beauty"
-      );
-      setAllProducts(filterProduct);
-    }else{
-      setAllProducts(getAllProduct)
+      const getAllProduct = response.data.allProducts;
+
+      if (value === "Mens") {
+        const filterProduct = getAllProduct.filter(
+          (e) => e.category === "Mens"
+        );
+        setAllProducts(filterProduct);
+      } else if (value === "Womens") {
+        const filterProduct = getAllProduct.filter(
+          (e) => e.category === "Womens"
+        );
+        setAllProducts(filterProduct);
+      } else if (value === "Kids") {
+        const filterProduct = getAllProduct.filter(
+          (e) => e.category === "Kids"
+        );
+        setAllProducts(filterProduct);
+      } else if (value === "Home") {
+        const filterProduct = getAllProduct.filter(
+          (e) => e.category === "Home"
+        );
+        setAllProducts(filterProduct);
+      } else if (value === "Beauty") {
+        const filterProduct = getAllProduct.filter(
+          (e) => e.category === "Beauty"
+        );
+        setAllProducts(filterProduct);
+      } else {
+        setAllProducts(getAllProduct);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -236,23 +252,23 @@ const AllProducts = () => {
                 {allproducts.map((item) => (
                   <div
                     className="mul-img"
-                    key={item.id}
-                    onClick={() => route(`/singleproduct/${item.id}`)}
+                    key={item._id}
+                    onClick={() => route(`/singleproduct/${item._id}`)}
                   >
                     <div className="singleImg">
-                      <img src={item.prodImg} alt="" />
+                      <img src={item.image} alt="" />
                     </div>
 
                     <div className="product-details">
-                      <h4>{item.prodTitle}</h4>
+                      <h4>{item.title}</h4>
                       <p>{item.prodBrand}</p>
                       <p>
-                        <b>Rs.{item.prodPrice}</b>{" "}
+                        <b>Rs.{item.price}</b>{" "}
                         <span className="line-through">
-                          Rs.{item.prodDiscount}
+                          {/* Rs.{item.prodDiscount} */}
                         </span>
                         <span className="span-color">
-                          &nbsp;({item.prodOffer}) %
+                          {/* &nbsp;({item.prodOffer}) % */}
                         </span>
                       </p>
                     </div>
@@ -280,7 +296,9 @@ const AllProducts = () => {
                 </div>
               </div>
             ) : (
-              <div>...Loading</div>
+              <div className="loader">
+                <img src={loader} alt="" />
+              </div>
             )}
           </div>
         </div>

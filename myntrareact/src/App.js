@@ -13,6 +13,8 @@ import Women from "./Components/Products/Women";
 import Kids from "./Components/Products/Kids";
 import Beauty from "./Components/Products/Beauty";
 import HomeProduct from "./Components/Products/HomeProduct";
+import Myproducts from "./Components/Products/Myproducts";
+import UpdateProduct from "./Components/Products/UpdateProduct";
 function App() {
   return (
     <>
@@ -25,8 +27,18 @@ function App() {
           <Route exact path="/kidsmyntra" element={<Kids />} />
           <Route exact path="/homeproductmyntra" element={<HomeProduct />} />
           <Route exact path="/beautymyntra" element={<Beauty />} />
-          <Route exact path="/singleproduct/:id" element={<SingleProduct />} />
+          <Route
+            exact
+            path="/singleproduct/:productId"
+            element={<SingleProduct />}
+          />
+          <Route
+            exact
+            path="/updateproduct/:productId"
+            element={<UpdateProduct />}
+          />
           <Route exact path="/addproduct" element={<AddProduct />} />
+          <Route exact path="/myproducts" element={<Myproducts />} />
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/cart" element={<Cart />} />
           <Route exact path="/login" element={<Login />} />

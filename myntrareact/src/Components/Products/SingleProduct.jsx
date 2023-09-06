@@ -5,88 +5,61 @@ import { useNavigate, useParams } from "react-router-dom";
 import { MyntraContext } from "../Context/MyContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 const SingleProduct = () => {
-  const [singleProd, setSingleProd] = useState({});
-  const [updateProdContainer, setUpdateProdContainer] = useState(false);
-  const { id } = useParams();
+  const [singleProd, setSingleProd] = useState({
+    title: "",
+    price: "",
+    image: "",
+    category: "",
+  });
+  const { productId } = useParams();
   const { state } = useContext(MyntraContext);
 
   const route = useNavigate();
 
   // console.log(singleProd);
+  // console.log(id);
 
   useEffect(() => {
-    const getProd = JSON.parse(localStorage.getItem("myntraproducts"));
+    async function singleProduct() {
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/singleproduct",
+          { productId }
+        );
 
-    if (getProd) {
-      const findProd = getProd.find((e) => e.id === id);
-      setSingleProd(findProd);
+        if (response.data.success) {
+          setSingleProd(response.data.singleProductData);
+        }
+      } catch (error) {
+        console.log(error.response.data.message);
+      }
     }
+
+    singleProduct();
   }, []);
 
-  const showUpdateProdContainer = () => {
-    setUpdateProdContainer(true);
-  };
-  const hideUpdateProdContainer = () => {
-    setUpdateProdContainer(false);
-  };
+  const addToCart = async (productId) => {
+    try {
+      const token = JSON.parse(localStorage.getItem("myntraToken"));
+      const response = await axios.post("http://localhost:8000/add-to-cart", {
+        productId,
+        token,
+      });
 
-  const handleProductDetails = (e) => {
-    const { value, name } = e.target;
-    setSingleProd({ ...singleProd, [name]: value });
-  };
-
-  const handleProductSubmit = (e) => {
-    e.preventDefault();
-
-    const getProd = JSON.parse(localStorage.getItem("myntraproducts"));
-    if (getProd) {
-      for (let i = 0; i < getProd.length; i++) {
-        if (getProd[i].id === id) {
-          getProd[i].prodTitle = singleProd.prodTitle;
-          getProd[i].prodBrand = singleProd.prodBrand;
-          getProd[i].prodPrice = singleProd.prodPrice;
-          getProd[i].prodImg = singleProd.prodImg;
-          getProd[i].prodDiscount = singleProd.prodDiscount;
-          getProd[i].prodCategory = singleProd.prodCategory;
-          getProd[i].prodOffer = singleProd.prodOffer;
-
-          localStorage.setItem("myntraproducts", JSON.stringify(getProd));
-          setUpdateProdContainer(false);
-          toast.success("updated succesfully");
-        }
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setTimeout(() => {
+          route("/cart");
+        }, 800);
       }
+    } catch (error) {
+      toast.warn(error.response.data.message);
     }
   };
 
-  const addToCart = (id) => {
-    const currentuser = JSON.parse(localStorage.getItem("currentmyntrauser"));
-    const regUser = JSON.parse(localStorage.getItem("myntraRegUser"));
-
-    if (currentuser) {
-      for (let i = 0; i < regUser.length; i++) {
-        if (regUser[i].myntraEmail === currentuser.myntraEmail) {
-          const findId = regUser[i].cart.find((e) => e.id === id);
-
-          if (regUser[i].cart.length && findId) {
-            toast.info("product already added");
-            setTimeout(() => {
-              route("/cart");
-            }, 1100);
-          } else {
-            regUser[i].cart.push(singleProd);
-            localStorage.setItem("myntraRegUser", JSON.stringify(regUser));
-            toast.success("product added");
-
-            setTimeout(() => {
-              route("/allproducts");
-            }, 1100);
-          }
-        }
-      }
-    }
-  };
   return (
     <>
       <Navbar />
@@ -103,89 +76,6 @@ const SingleProduct = () => {
         theme="dark"
       />
 
-      {updateProdContainer ? (
-        <div className="updateProductContainer">
-          <div className="updateProductSection">
-            <p onClick={hideUpdateProdContainer}>X</p>
-
-            <form className="updateProductForm" onSubmit={handleProductSubmit}>
-              <div>
-                <input
-                  name="prodTitle"
-                  type="text"
-                  placeholder="Update Title"
-                  onChange={handleProductDetails}
-                  value={singleProd.prodTitle}
-                />
-              </div>
-              <div>
-                <input
-                  name="prodBrand"
-                  type="text"
-                  placeholder="Update Brand"
-                  onChange={handleProductDetails}
-                  value={singleProd.prodBrand}
-                />
-              </div>
-              <div>
-                <input
-                  name="prodPrice"
-                  type="number"
-                  placeholder="Update Price"
-                  onChange={handleProductDetails}
-                  value={singleProd.prodPrice}
-                />
-              </div>
-              <div>
-                <input
-                  name="prodOffer"
-                  type="number"
-                  placeholder="Update Offer"
-                  onChange={handleProductDetails}
-                  value={singleProd.prodOffer}
-                />
-              </div>
-              <div>
-                <input
-                  name="prodImg"
-                  type="text"
-                  placeholder="Update Image Url"
-                  onChange={handleProductDetails}
-                  value={singleProd.prodImg}
-                />
-              </div>
-              <div>
-                <input
-                  name="prodDiscount"
-                  type="number"
-                  placeholder="Update Discount"
-                  onChange={handleProductDetails}
-                  value={singleProd.prodDiscount}
-                />
-              </div>
-              <div>
-                <select
-                  value={singleProd.prodCategory}
-                  onChange={handleProductDetails}
-                  name="prodCategory"
-                >
-                  <option value="">SELECT CATEGORY</option>
-                  <option value="Mens">Mens</option>
-                  <option value="Womens">Womens</option>
-                  <option value="Kids">Kids</option>
-                  <option value="HOME">HOME</option>
-                  <option value="Beauty">Beauty</option>
-                </select>
-              </div>
-
-              <div>
-                <input type="submit" value="UPDATE PRODUCT" />
-              </div>
-            </form>
-          </div>
-        </div>
-      ) : null}
-
       <div id="heading">
         <p>
           Home / Clothing / Men Clothing / Tshirts / Roadster
@@ -197,26 +87,26 @@ const SingleProduct = () => {
         <div id="main-singleProdsection">
           <div id="left-singleProd">
             <div>
-              <img src={singleProd.prodImg} alt="" />
+              <img src={singleProd.image} alt="" />
             </div>
             <div>
-              <img src={singleProd.prodImg} alt="" />
+              <img src={singleProd.image} alt="" />
             </div>
             <div>
-              <img src={singleProd.prodImg} alt="" />
+              <img src={singleProd.image} alt="" />
             </div>
             <div>
-              <img src={singleProd.prodImg} alt="" />
+              <img src={singleProd.image} alt="" />
             </div>
             <div>
-              <img src={singleProd.prodImg} alt="" />
+              <img src={singleProd.image} alt="" />
             </div>
           </div>
           <div id="right-singleProd">
             <div>
               <div id="right-1">
-                <h2>{singleProd.prodBrand}</h2>
-                <p>{singleProd.prodTitle}</p>
+                <h2>{singleProd.title}</h2>
+                {/* <p>{singleProd.title}</p> */}
 
                 <div id="right-ratings">
                   <p>4.1</p>
@@ -230,10 +120,10 @@ const SingleProduct = () => {
               </div>
               <div id="right-2">
                 <div id="right-2-inside">
-                  <h3>&#8377;{singleProd.prodPrice}</h3>
-                  <p>MRP</p>
-                  <p>&#8377;{singleProd.prodDiscount}</p>
-                  <p>({singleProd.prodOffer})%</p>
+                  <h3>&#8377;{singleProd.price}</h3>
+                  {/* <p>MRP</p> */}
+                  {/* <p>&#8377;{singleProd.prodDiscount}</p> */}
+                  {/* <p>({singleProd.prodOffer})%</p> */}
                 </div>
 
                 <p>inclusive of all taxes</p>
@@ -250,20 +140,10 @@ const SingleProduct = () => {
                   <p>XL</p>
                 </div>
 
-                {state?.currentuser?.myntraRole === "Seller" && (
-                  <div className="updateBtn">
-                    <div>
-                      <button onClick={showUpdateProdContainer}>
-                        UPDATE PRODUCT
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {state?.currentuser?.myntraRole === "Buyer" && (
+                {state?.currentuser?.role === "Buyer" && (
                   <div id="btn">
                     <div>
-                      <button onClick={() => addToCart(singleProd.id)}>
+                      <button onClick={() => addToCart(singleProd._id)}>
                         ADD TO CART
                       </button>
                     </div>

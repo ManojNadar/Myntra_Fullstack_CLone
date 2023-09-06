@@ -46,13 +46,14 @@ const ProfileDropDown = () => {
               Welcome
               <span
                 style={{
-                  color: "white",
-                  backgroundColor: "red",
                   marginLeft: "3%",
                   padding: "2% 3%",
+                  fontWeight: "bold",
+                  color: "black",
+                  fontSize: "1.2em",
                 }}
               >
-                {state?.currentuser?.name}
+                {state?.currentuser?.name.toUpperCase()}
               </span>
             </h4>
             <p>To access account and manage orders</p>
@@ -60,15 +61,33 @@ const ProfileDropDown = () => {
         )}
         <div>
           {state?.currentuser?.role === "Seller" ? (
-            <h4
-              onClick={() => route("/addproduct")}
-              style={{
-                textAlign: "center",
-                cursor: "pointer",
-              }}
-            >
-              Add Product
-            </h4>
+            <div>
+              <div
+                style={{
+                  cursor: "pointer",
+                  color: "white",
+                  width: "75%",
+                  marginTop: "1%",
+                  textAlign: "center",
+                  backgroundColor: "rgb(246, 62, 62)",
+                }}
+              >
+                <h4 onClick={() => route("/addproduct")}>Add Product</h4>
+              </div>
+
+              <div
+                style={{
+                  cursor: "pointer",
+                  backgroundColor: "green",
+                  width: "55%",
+                  marginTop: "1%",
+                  textAlign: "center",
+                  color: "white",
+                }}
+              >
+                <h4 onClick={() => route("/myproducts")}>My Products</h4>
+              </div>
+            </div>
           ) : null}
 
           <p>Orders</p>
