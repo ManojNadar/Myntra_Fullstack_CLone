@@ -7,6 +7,7 @@ import {
   GetNumber,
   Login,
   Register,
+  editProfile,
   getcurrentuser,
   // sendOtp,
   // verifyOtp,
@@ -58,6 +59,7 @@ app.post("/register", Register);
 app.post("/login", Login);
 app.post("/currentuser", getcurrentuser);
 app.post("/getnumber", GetNumber);
+app.post("/editprofile", editProfile);
 
 // otp -- --- --- --- ----
 

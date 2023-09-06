@@ -6,10 +6,15 @@ import { useNavigate } from "react-router-dom";
 import { MyntraContext } from "./Context/MyContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 const Profile = () => {
   const [profileModal, setProfileModal] = useState(false);
-  const [prevValue, setPrevValue] = useState({});
+  const [prevValue, setPrevValue] = useState({
+    name: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   // console.log(prevValue);
 
@@ -21,47 +26,28 @@ const Profile = () => {
     setPrevValue({ ...prevValue, [name]: value });
   };
 
-  const submitUpdateProfileDetails = (e) => {
+  const submitUpdateProfileDetails = async (e) => {
     e.preventDefault();
 
     const { name, password, confirmPassword } = prevValue;
 
     if (name && password && confirmPassword) {
       if (password === confirmPassword) {
-        const getCurrData = JSON.parse(
-          localStorage.getItem("currentmyntrauser")
-        );
-        const regmyntraUser = JSON.parse(localStorage.getItem("myntraRegUser"));
+        const token = JSON.parse(localStorage.getItem("myntraToken"));
+        const response = await axios.post("http://localhost:8000/editprofile", {
+          token,
+          prevValue,
+        });
 
-        if (getCurrData) {
-          for (let i = 0; i < regmyntraUser.length; i++) {
-            if (regmyntraUser[i].email === getCurrData.email) {
-              regmyntraUser[i].name = prevValue.name;
-              regmyntraUser[i].password = prevValue.password;
-              regmyntraUser[i].confirmPassword = prevValue.confirmPassword;
-              getCurrData.name = prevValue.name;
-              getCurrData.password = prevValue.password;
-              getCurrData.confirmPassword = prevValue.confirmPassword;
-
-              login(getCurrData);
-              localStorage.setItem(
-                "myntraRegUser",
-                JSON.stringify(regmyntraUser)
-              );
-              localStorage.setItem(
-                "currentmyntrauser",
-                JSON.stringify(getCurrData)
-              );
-              setProfileModal(false);
-              toast.success("profile updated");
-            }
-          }
+        if (response.data.success) {
+          toast.success(response.data.message);
+          setProfileModal(false);
         }
       } else {
-        toast.error("password do not match");
+        toast.warn("password doesnot match");
       }
     } else {
-      toast.warn("no value has been changed");
+      toast.warn("all fields are mandatory");
     }
   };
 
@@ -124,7 +110,7 @@ const Profile = () => {
                 onChange={updateProfileDetails}
                 placeholder="Update Name"
                 value={prevValue.name}
-                name="myntraUser"
+                name="name"
               />
             </div>
             <div>
@@ -133,7 +119,7 @@ const Profile = () => {
                 onChange={updateProfileDetails}
                 placeholder="Update password"
                 value={prevValue.password}
-                name="myntraPassword"
+                name="password"
               />
             </div>
             <div>
@@ -141,7 +127,8 @@ const Profile = () => {
                 type="password"
                 onChange={updateProfileDetails}
                 placeholder="Confirm Password"
-                name="myntraCpassword"
+                name="confirmPassword"
+                value={prevValue.confirmPassword}
               />
             </div>
             <div>
