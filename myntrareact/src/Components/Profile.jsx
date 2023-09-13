@@ -21,6 +21,12 @@ const Profile = () => {
   const route = useNavigate();
   const { state, login } = useContext(MyntraContext);
 
+  const openProfileModal = () => {
+    setProfileModal(true);
+  };
+  const closeProfileModal = () => {
+    setProfileModal(false);
+  };
   const updateProfileDetails = (e) => {
     const { name, value } = e.target;
     setPrevValue({ ...prevValue, [name]: value });
@@ -33,17 +39,24 @@ const Profile = () => {
 
     if (name && password && confirmPassword) {
       if (password === confirmPassword) {
-        const token = JSON.parse(localStorage.getItem("myntraToken"));
-        const response = await axios.post("http://localhost:8000/editprofile", {
-          token,
-          prevValue,
-        });
+        try {
+          const token = JSON.parse(localStorage.getItem("myntraToken"));
+          const response = await axios.post(
+            "http://localhost:8000/editprofile",
+            {
+              token,
+              prevValue,
+            }
+          );
 
-        if (response.data.success) {
-          const userData = response.data.updateUser;
-          login(userData, token);
-          toast.success(response.data.message);
-          setProfileModal(false);
+          if (response.data.success) {
+            const userData = response.data.updateUser;
+            login(userData, token);
+            toast.success(response.data.message);
+            setProfileModal(false);
+          }
+        } catch (error) {
+          console.log(error);
         }
       } else {
         toast.warn("password doesnot match");
@@ -51,13 +64,6 @@ const Profile = () => {
     } else {
       toast.warn("all fields are mandatory");
     }
-  };
-
-  const openProfileModal = () => {
-    setProfileModal(true);
-  };
-  const closeProfileModal = () => {
-    setProfileModal(false);
   };
 
   useEffect(() => {
