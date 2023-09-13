@@ -22,7 +22,7 @@ const UpdateProduct = () => {
         const token = JSON.parse(localStorage.getItem("myntraToken"));
 
         const response = await axios.post(
-          "http://localhost:8000/GetEditProduct",
+          "http://localhost:8000/geteditproduct",
           { productId, token }
         );
 
