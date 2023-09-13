@@ -1,14 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Navbar from "../Navbar";
 import "../../Styles/MyProducts.css";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { MyntraContext } from "../Context/MyContext";
 
 const Myproducts = () => {
   const [ownProducts, setOwnProducts] = useState([]);
 
+  const { state } = useContext(MyntraContext);
+
   const route = useNavigate();
+
+  useEffect(() => {
+    if (state?.currentuser?.role != "Seller") {
+      route("/");
+    }
+  }, [state]);
 
   useEffect(() => {
     async function getOwnProducts() {
