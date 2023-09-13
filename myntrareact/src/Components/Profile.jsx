@@ -56,7 +56,7 @@ const Profile = () => {
             setProfileModal(false);
           }
         } catch (error) {
-          console.log(error);
+          console.log(object);
         }
       } else {
         toast.warn("password doesnot match");
