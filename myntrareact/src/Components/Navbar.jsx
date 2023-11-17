@@ -104,14 +104,7 @@ const Navbar = () => {
               <small>Profile</small>
             </p>
           </div>
-          <div>
-            <i className="fa-regular fa-heart fa-sm"></i>
-            <p>
-              <small>
-                <NavLink to="/wishlist.html"> Wishlist</NavLink>
-              </small>
-            </p>
-          </div>
+
           {state?.currentuser?.role === "Buyer" ? (
             <div>
               <NavLink to="/cart">
